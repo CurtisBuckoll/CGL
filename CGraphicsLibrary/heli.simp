@@ -1,0 +1,24 @@
+{
+        translate 0, 10, -150
+        camera -1 -1 1 1 1 5000
+}
+
+#wire
+
+depth 1.0 400.0 (0.0, 0.0, 0.0)
+surface (0.1, 0.3, 1.0)
+ambient (1.0, 1.0, 1.0)
+
+translate 0, 0, 150
+rotate Y -50
+rotate Z 20
+scale 15, 20, 20
+
+obj "playerShip"
+
+#translate 0, 0, 5
+#rotate X -80
+
+#scale 20, 500, 1000
+#file "cube"
+#polygon (-4, 0, 0) (4, 0, 0) (0, 2, 0)

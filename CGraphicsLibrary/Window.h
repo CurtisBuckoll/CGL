@@ -2,6 +2,8 @@
 
 #include <SDL\SDL.h>
 
+#include "Vertex.h"
+
 class Window
 {
 private:
@@ -13,6 +15,8 @@ public:
 	~Window();
 
 	void init();
-	void setPixel(int x, int y);
+	void clearBackground();
+	void setPixel(int x, int y, Color color);
+	void RenderFrame();
 };
 

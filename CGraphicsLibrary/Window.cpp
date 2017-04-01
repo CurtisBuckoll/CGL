@@ -1,7 +1,6 @@
 #include "Window.h"
 
 
-
 Window::Window()
 {
 	_window = nullptr;
@@ -11,6 +10,8 @@ Window::Window()
 
 Window::~Window()
 {
+	//SDL_DestroyRenderer(_renderer);
+	//SDL_DestroyWindow(_window);
 }
 
 void Window::init()
@@ -31,11 +32,22 @@ void Window::init()
 }
 
 
-void Window::setPixel(int x, int y)
+void Window::clearBackground()
 {
-	SDL_SetRenderDrawColor(_renderer, 255, 0, 0, 0);
-	SDL_RenderDrawPoint(_renderer, x, y);
-	SDL_RenderPresent(_renderer); // Move this to it's own 'render frame' function
+	SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 0);
+	SDL_RenderClear(_renderer);
+}
+
+void Window::RenderFrame()
+{
+	SDL_RenderPresent(_renderer);
+}
+
+
+void Window::setPixel(int x, int y, Color color)
+{
+	SDL_SetRenderDrawColor(_renderer, color.r, color.g, color.b, 0);
+	SDL_RenderDrawPoint(_renderer, x, -(y - 749));
 
 
 	/*

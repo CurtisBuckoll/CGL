@@ -1,0 +1,95 @@
+#depth 1.0 400.0 (1.0, 0.0, 0.0)
+#depth 100.0 400.0 (0.0, 0.0, 0.0)
+surface (0.4, 0.4, 0.5) 0.3 8
+#ambient (0.4, 0.9, 0.3)
+ambient (0.6, 0.6, 0.6)
+
+#surface (1, 1, 1) 0.3 8
+#ambient (1, 1, 1)
+
+#Final Points
+#x: 0 y: 443 z: 300 colour: 4291836389
+#x: 0 y: 359 z: 300 colour: 4278190080
+#x: 325 y: 325 z: 300 colour: 4281157630
+
+phong
+
+surface (1.0, 1.0, 1.0) 0.3 100
+# the light source
+{
+    translate 0 0 -60
+    light 1.5 1.5 1.5 0.01 0.01
+    scale 10, 10, 10
+    file "cube"
+}
+
+#wire
+
+{
+        rotate Z -70
+        scale 4000, 400, 200
+
+        #obj "testobj"
+}
+
+{
+        translate 0 0 1
+        rotate X 49
+        scale 30, 200, 100
+
+        #obj "testobj2"
+}
+
+{
+        translate -70, 10, 20
+        rotate Y 40
+        rotate Z 50
+        scale 42, 42, 42
+
+        #file "cube"
+        obj "cube"
+}
+
+{
+        translate 70, 50, 20
+        rotate Y 67
+        rotate X 120
+        rotate Z 80
+        scale 30, 30, 30
+
+        #file "cube"
+        obj "cube"
+}
+
+{
+        translate -90, -50, 0
+        rotate X -20
+        rotate Z 65
+        scale 40, 40, 40
+
+
+        #file "cube"
+        obj "cube"
+}
+
+{
+        translate (0, -60, 65)
+        rotate Y -40
+        rotate X 45
+        rotate Z 30
+        scale (60, 60, 60)
+
+        #file "cube"
+        obj "cube"
+}
+
+{
+        translate (-20, 60, 30)
+        rotate Y -40
+        rotate X 45
+        rotate Z -20
+        scale (20, 20, 20)
+
+        #file "cube"
+        obj "cube"
+}

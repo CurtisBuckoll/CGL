@@ -1,0 +1,52 @@
+flat
+
+ambient 0.5 0.5 0.5
+depth 1 40 0.0 0.0 0.0
+surface 0.6 0.6 0.6 0.3 100
+
+#wire
+
+# Default Camera
+{
+        #rotate Y 45
+        translate 0 0 -5
+        camera -1, -1, 1, 1, 1, 200
+}
+
+#Light
+{
+        translate 4, 1, -2
+        light 1.5 1.5 1.5 0.8 0.8
+}
+
+#Light
+{
+        translate -5, 0, 0
+        light 1.5 1.5 1.5 0.8 0.8
+}
+
+#Light
+{
+        translate -1, 2, 2
+        light 3.0 1.5 1.5 0.8 0.8
+}
+
+#Light
+{
+        translate 10, 0, 0
+        light 1.5 3.0 1.5 0.8 0.8
+}
+
+#Light
+{
+        translate -7, 1, 5
+        light 1.5 1.5 3.0 0.8 0.8
+}
+
+{
+        translate 0 0 3
+
+        scale 7 7 7
+
+        obj "lightScene"
+}

@@ -1,0 +1,9 @@
+{
+    rotate Y -225
+    translate 0, 0, -200
+    camera -1 -1 1 1 50 500
+}
+
+file "modifyParams"
+
+file "camScene"

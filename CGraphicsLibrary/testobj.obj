@@ -1,0 +1,44 @@
+# A geometric vertex with x y z [w] coordinates. Numbers are space (or tab)-separated (no commas)
+v 0.123 0.234 0.345 1.0
+# w is optional and defaults to 1.0
+v 0.678 0.901 0.235 1.5
+# colors may be present: these lines are {x y z r g b} and {x y z w r g b}
+v 0.15 0.39 0.04 0.7 0.12 0.5
+v 0.25 0.41 0.33 2.0 0.7 0.42 0.42
+
+# in this group, the four vertices (in order) are referenced as -4, -3, -2, and -1 in the faces
+v -0.500000 0.000000 0.400000
+v -0.500000 0.000000 -0.800000
+v -0.500000 1.000000 -0.800000
+v -0.500000 1.000000 0.400000
+f -4 -3 -2
+f -3 -2 -1
+
+# in this group, both vertices and normals are referenced with relative negative indices.
+# the first vertex & normal are referenced as -3’s in the face, the second as -2’s, the third as -1’s.
+v 0.500000 0.000000 0.400000
+vn 0.500000 0.500000 0.000000
+
+v 0.500000 0.000000 -0.800000
+vn 0.500000 0.500000 0.200000
+
+v 0.500000 1.000000 -0.800000
+vn 0.500000 0.000000 -0.500000
+
+vn 0.500000 0.000000 -0.500000
+vn 0.500000 0.000000 -0.500000
+vn 0.500000 0.000000 -0.500000
+
+# polygonal faces
+f 1 2 3
+f 2 3 4 5 6 7
+
+f -3//-3 -2//-2 -1//-1
+
+# polygonal faces with vertex normals
+f 1//1 2//1 3//2
+f 2//1 3//2 4//3 5//4
+
+# polygonal faces with texture coordinates
+f 11/1 12/1 13/3
+f 12/2/3 13/3/4 14/4/5 15/5/6

@@ -21,10 +21,195 @@
     <ClCompile Include="Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="client.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Line.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Polygon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Clip.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicArray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Lighting.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Stack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vertex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="zBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Point.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="client.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Polygon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Clip.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lighting.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpWriter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Stack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="zBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Point.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="barrel.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="cam1.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="cam2.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="cam3.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="cam4.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="cam5.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="cam6.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="cam7.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="cam8.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="camScene.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="cube.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="cube2.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="heli.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="interpCheck.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="lightScene.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="lightScene2.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="lightScene3.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="modifyParams.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="niceCubeline.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="page4.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="page5.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="README.md">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="sphere.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="test.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="test1.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="test2.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="test3.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="threeCubelinesIntersecting.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="triangle.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="triPrism.simp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="z0_face.simp">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

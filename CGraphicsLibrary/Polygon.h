@@ -1,0 +1,43 @@
+#pragma once
+
+#include <vector>
+
+#include "Line.h"
+#include "DynamicArray.h"
+#include "Matrix.h"
+#include "zBuffer.h"
+#include "Vertex.h"
+#include "Lighting.h"
+#include "Window.h"
+
+
+
+class Polygon
+{
+public:
+	/* Draws a filled convex polygon by connecting the list of points.
+	 * Pre: Points passed in are specified in counter-clockwise order.
+	 *		Points list cannot have more than two topmost points with common Y values.
+	 */
+    /*static void drawPolygon(DynamicArray<vec3> points,
+							const unsigned int& color, 
+							float opacity, 
+							bool wireframe, 
+							zBuffer* zbuffer,
+							Drawable* drawable);
+                            */
+
+	/* Draws a filled convex polygon by connecting the list of points and using bi-linear interpolation
+	 * Pre: Points passed in are specified in counter-clockwise order.
+	 *		Points list cannot have more than two topmost points with common Y values.
+	 *		Opacity expects a value between 0.0 and 1.0.
+	 *		Vertices should have a specified colour.
+	 */
+    static void drawPolygonLERP(std::vector<Vertex> points,
+								float opacity, 
+								bool wireframe, 
+								zBuffer* zbuffer,
+                                Window* window,
+                                Lighting* lightEngine);
+};
+

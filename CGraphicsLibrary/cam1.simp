@@ -1,0 +1,13 @@
+{
+        rotate Y 0
+        translate 30, 0, -200
+        camera -1 -1 1 1 50 500
+}
+#wire
+
+file "modifyParams"
+
+#ambient 1 1 1
+#depth  500 1 1 1
+
+file "camScene"

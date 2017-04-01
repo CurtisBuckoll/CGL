@@ -1,0 +1,76 @@
+#** draw spheres
+{
+	translate -25, 50, 180
+	{
+		scale 25, 25, 150
+		file "sphere"
+	}
+	{
+		translate -50, -5, 30
+		scale 17, 17, 150
+		file "sphere"
+	}
+	{
+		translate -35, 35, 70
+		scale 12, 12, 150
+		file "sphere"
+	}
+}
+
+wire
+
+{
+	translate 0, 0, 300
+	scale 70, 70, 200
+	file "sphere"
+}
+
+filled
+
+{
+	translate 55, 55, 150
+	rotate Y 20
+	rotate Z 60
+	rotate X -10
+	{
+		scale 40, 20, 40
+
+		file "barrel"
+	}
+	{
+		translate 0, -15, 0
+		scale 30, 10, 30
+
+		file "barrel"
+	}
+	{
+		translate 0, -29, 0
+		scale 15, 11, 12
+
+		file "barrel"
+	}
+}
+
+{
+	translate -150, -100, 70
+	rotate X -55
+	scale 70, 70, 100
+
+	polygon (0, 0, 0) (2, 0, 0) (1, 2, 0)
+
+	scale 0.6, 0.9, 100
+	translate 2, 0, 0
+
+	polygon (0, 0, 0) (2, 0, 0) (1, 2, 0)
+
+	{
+		translate 1, -1, 0
+		polygon (0, 0, 0) (2, 0, 0) (1, 2, 0)
+	}
+
+	scale 1.2, 1.3, 100
+	translate 2, 0, 0
+
+	polygon (0, 0, 0) (2, 0, 0) (1, 2, 0)
+
+}
