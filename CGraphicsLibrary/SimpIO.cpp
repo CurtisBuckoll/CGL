@@ -18,7 +18,8 @@ void SimpIO::TransformToWorld(const DynamicArray<Vertex>& vertices, std::vector<
 		Vertex newVertex = vertices[i];
 		newVertex.pos.hgDivision();
 		newVertex.pos_WS = _CTM * newVertex.pos;
-		newVertex.pos = _CAMERA * newVertex.pos_WS;
+		//newVertex.pos_WS.print();
+		//newVertex.pos = _CAMERA * newVertex.pos_WS;
 
 		// Transform the normal with respect to WSC, if a nonzero normal provided
 		if (newVertex.normal != vec4(0.0f, 0.0f, 0.0f, 0.0f))
@@ -48,54 +49,7 @@ void SimpIO::TransformToWorld(const DynamicArray<Vertex>& vertices, std::vector<
 		}
 	}
 
-	// Perform polygon culling/clipping
-	if (_frustum.cullToFrustum(vertexList))
-	{
-		return;
-	}
-	_frustum.clipToFrustum(&vertexList);
-
-	// Triangulate cipped vertices (if necessary)
-	std::vector<std::vector<Vertex>> splitVertexList;
-	if (vertexList.size() >= 3)
-	{
-		for (int k = 1; k < vertexList.size() - 1; k++)
-		{
-			std::vector<Vertex> triangle;
-			triangle.push_back(vertexList[0]);
-			triangle.push_back(vertexList[k]);
-			triangle.push_back(vertexList[k + 1]);
-			splitVertexList.push_back(triangle);
-		}
-	}
-	else
-	{
-		std::vector<Vertex> line;
-		for (int k = 0; k < vertexList.size(); k++)           //This doesn't have to be loop. change later
-		{
-			line.push_back(vertexList[k]);
-		}
-		splitVertexList.push_back(line);
-	}
-
-	// Finish transforming and render the data
-	for (int j = 0; j < splitVertexList.size(); j++)
-	{
-		//DynamicArray<Vertex> points;
-		for (int k = 0; k < splitVertexList[j].size(); k++)
-		{
-			splitVertexList[j][k].pos = _PROJ * splitVertexList[j][k].pos;
-			if (splitVertexList[j][k].pos.z != 0)
-			{
-				splitVertexList[j][k].pos.x = splitVertexList[j][k].pos.x / splitVertexList[j][k].pos.z;
-				splitVertexList[j][k].pos.y = splitVertexList[j][k].pos.y / splitVertexList[j][k].pos.z;
-			}
-			splitVertexList[j][k].pos.w = 1.0f;
-			scaleToScreen(&splitVertexList[j][k].pos);
-			splitVertexList[j][k].pos = _SCREEN * splitVertexList[j][k].pos;
-		}
-		transformed->push_back(splitVertexList[j]);
-	}
+	transformed->push_back(vertexList);
 }
 
 
@@ -338,8 +292,8 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 
 		for (int j = 0; j < transformedVertices.size(); j++)
 		{
-			_lightEngine->init(&transformedVertices[j]);
-			Polygon::drawPolygonLERP(transformedVertices[j], 1.0f, _wireFrame, _zBuffer, _window, _lightEngine);
+			//_lightEngine->init(&transformedVertices[j]);
+			_polygons->append(transformedVertices[j]);
 		}
 	}
 
@@ -363,12 +317,12 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 			_depthNear = modifiedVals.depthNear;
 			_surfaceColor = modifiedVals.surfaceColor;
 			_wireFrame = modifiedVals.wireFrame;
+			_zBuffer = modifiedVals.zbuffer;
 
-			// Update other necessary parameters
+			// Update other necessary parameters MIGHT NOT NEED THIS NOW?!
 			_zBuffer->depthNear = _depthNear;
 			_zBuffer->depthFar = _depthFar;
 			_zBuffer->depthColor = _depthColor;
-
 		}
 		else
 		{
@@ -412,7 +366,7 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 	{
 		if (tokens.size() == 7)
 		{
-			_CAMERA = _CTM.inverse();
+			_CAMERA = _CTM;
 
 			// Get eyepoint for lighting calculation
 			vec4 eyePoint = vec4(0.0f, 0.0f, 0.0f, 1.0f);
@@ -457,6 +411,8 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 				Vertex currVertex = vertices[faces[i].vertices[k].vIndex];
 				currVertex.normal = normals[faces[i].vertices[k].nIndex];
 				vertexList.append(currVertex);
+
+				//currVertex.pos.print();
 			}
 			std::vector<std::vector<Vertex>> transformedVertices;
 
@@ -464,15 +420,16 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 
 			for (int j = 0; j < transformedVertices.size(); j++)
 			{
-				if (transformedVertices[j].size() == 2)
+				if (transformedVertices[j].size() >= 2)
 				{
-					Line::DDA(transformedVertices[j][0], transformedVertices[j][1], _zBuffer, _window);
+					//Line::DDA(transformedVertices[j][0], transformedVertices[j][1], _zBuffer, _window);
+					_polygons->append(transformedVertices[j]);
 				}
-				else if (transformedVertices[j].size() >= 3)
-				{
-					_lightEngine->init(&transformedVertices[j]);
-					Polygon::drawPolygonLERP(transformedVertices[j], 1.0f, _wireFrame, _zBuffer, _window, _lightEngine);
-				}
+				//else if (transformedVertices[j].size() >= 3)
+				//{
+				//	_lightEngine->init(&transformedVertices[j]);
+				//	Polygon::drawPolygonLERP(transformedVertices[j], 1.0f, _wireFrame, _zBuffer, _window, _lightEngine);
+				//}
 			}
 
 
@@ -603,6 +560,8 @@ void splitStrings(const std::string& currLine, std::vector<std::string>* tokens)
 
 SimpIOArgs SimpIO::Read()
 {
+	std::cout << "Reading vertex data.." << std::endl;
+
 	if (!_currentFile.is_open())
 	{
 		std::cout << "File not open. Exiting." << std::endl;
@@ -635,5 +594,7 @@ SimpIOArgs SimpIO::Read()
 	}
 	_currentFile.close();
 
-	return SimpIOArgs(_CTM, _CAMERA, _wireFrame, _depthNear, _depthFar, _ambientColor, _depthColor, _surfaceColor);
+	std::cout << "Done reading file." << std::endl;
+
+	return SimpIOArgs(_CTM, _CAMERA, _wireFrame, _depthNear, _depthFar, _ambientColor, _depthColor, _surfaceColor, _zBuffer);
 }

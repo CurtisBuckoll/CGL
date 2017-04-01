@@ -27,6 +27,8 @@ public:
             float xHigh = 1.0f, float yHigh = 1.0f);
 	~zBuffer();
 
+	void reset();
+
 	zBuffer& operator=(const zBuffer& arr);
 };
 

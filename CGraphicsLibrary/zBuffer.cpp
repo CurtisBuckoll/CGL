@@ -76,3 +76,14 @@ zBuffer& zBuffer::operator=(const zBuffer& rhs)
 
 	return *this;
 }
+
+void zBuffer::reset()
+{
+	for (int x = 0; x < width; x++)
+	{
+		for (int y = 0; y < height; y++)
+		{
+			buffer[x][y] = yon;
+		}
+	}
+}

@@ -45,6 +45,9 @@ void SimpReader::TransformToScreen(const DynamicArray<Vertex>& vertices, std::ve
         Vertex newVertex = vertices[i];
         newVertex.pos.hgDivision();
         newVertex.pos_WS = _CTM * newVertex.pos;
+
+		//newVertex.pos_WS.print();
+
         newVertex.pos = _CAMERA * newVertex.pos_WS;
 
         //newVertex.normal.print();
@@ -538,6 +541,8 @@ void SimpReader::Interpret(const std::vector<std::string>& tokens)
                 Vertex currVertex = vertices[faces[i].vertices[k].vIndex];
                 currVertex.normal = normals[faces[i].vertices[k].nIndex];
                 vertexList.append(currVertex);
+
+				//currVertex.pos.print();
             }
             std::vector<std::vector<Vertex>> transformedVertices;
 

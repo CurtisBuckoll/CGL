@@ -1,5 +1,6 @@
 #include "Window.h"
 
+#include <iostream>
 
 Window::Window()
 {
@@ -45,6 +46,8 @@ void Window::RenderFrame()
 	SDL_UpdateTexture(_texture, NULL, &_pixels[0], _width * 4);
 	SDL_RenderCopy(_renderer, _texture, NULL, NULL);
 	SDL_RenderPresent(_renderer);
+
+	memset(&_pixels[0], 0, _width * _height * 4);
 }
 
 
@@ -52,6 +55,11 @@ void Window::setPixel(int x, int y, Color color)
 {
 	int Y = -(y - (int)_height);
 	int offset = (_width * 4 * Y) + x * 4;
+	if (offset >= _pixels.size())
+	{
+		std::cout << "Out of range: " << offset << " " << _pixels.size() << std::endl;
+		return;
+	}
 	_pixels[offset + 0] = color.r;      
 	_pixels[offset + 1] = color.g;       
 	_pixels[offset + 2] = color.b;       

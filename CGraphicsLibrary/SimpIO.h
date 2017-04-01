@@ -13,9 +13,8 @@
 #include "Window.h"
 
 
-class PolygonList 
+struct PolygonList 
 {
-public:
 	std::vector<std::vector<Vertex>> vertices;
 
 	void append(std::vector<Vertex> polygon)
@@ -34,9 +33,10 @@ struct SimpIOArgs {
 	Color_f ambientColor;
 	Color depthColor;
 	Color surfaceColor;
+	zBuffer* zbuffer;
 
 	SimpIOArgs(mat4 CTM_, mat4 CAMERA_, bool wireframe_, float depthNear_, float depthFar_,
-			   Color_f ambientColor_, Color depthColor_, Color surfaceColor_) :
+			   Color_f ambientColor_, Color depthColor_, Color surfaceColor_, zBuffer* buffer_) :
 	CTM(CTM_),
 	CAMERA(CAMERA_),
 	wireFrame(wireframe_),
@@ -44,7 +44,8 @@ struct SimpIOArgs {
 	depthFar(depthFar_),
 	ambientColor(ambientColor_),
 	depthColor(depthColor_),
-	surfaceColor(surfaceColor_)
+	surfaceColor(surfaceColor_),
+	zbuffer(buffer_)
 	{
 		// Empty
 	}
