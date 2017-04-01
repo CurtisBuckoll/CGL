@@ -1,3 +1,19 @@
-﻿  main.cpp
+﻿  SimpIO.cpp
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\simpio.cpp(41): warning C4018: '<': signed/unsigned mismatch
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\simpio.cpp(62): warning C4018: '<': signed/unsigned mismatch
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\simpio.cpp(74): warning C4018: '<': signed/unsigned mismatch
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\simpio.cpp(82): warning C4018: '<': signed/unsigned mismatch
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\simpio.cpp(85): warning C4018: '<': signed/unsigned mismatch
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\simpio.cpp(136): warning C4018: '<': signed/unsigned mismatch
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\simpio.cpp(296): warning C4018: '<': signed/unsigned mismatch
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\simpio.cpp(311): warning C4018: '<': signed/unsigned mismatch
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\simpio.cpp(320): warning C4018: '<': signed/unsigned mismatch
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\simpio.cpp(339): warning C4018: '<': signed/unsigned mismatch
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\simpio.cpp(452): warning C4018: '<': signed/unsigned mismatch
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\simpio.cpp(455): warning C4018: '<': signed/unsigned mismatch
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\simpio.cpp(465): warning C4018: '<': signed/unsigned mismatch
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\simpio.cpp(568): warning C4018: '<': signed/unsigned mismatch
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\simpio.cpp(588): warning C4018: '<': signed/unsigned mismatch
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\simpio.cpp(619): warning C4018: '<': signed/unsigned mismatch
   CGraphicsLibrary.vcxproj -> C:\Users\Curtis\Documents\Visual Studio 2015\Projects\CGraphicsLibrary\Debug\CGraphicsLibrary.exe
   CGraphicsLibrary.vcxproj -> C:\Users\Curtis\Documents\Visual Studio 2015\Projects\CGraphicsLibrary\Debug\CGraphicsLibrary.pdb (Partial PDB)

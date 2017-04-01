@@ -62,7 +62,7 @@ void Client::pageOne()
     SimpReader file("./lightScene.simp", _window, zbuffer, lightEngine);
     file.Read();
 
-   // _drawable->updateScreen();
+	_window->RenderFrame();
 }
 
 
@@ -76,7 +76,7 @@ void Client::pageTwo()
     SimpReader file("./lightScene2.simp", _window, zbuffer, lightEngine);
     file.Read();
 
-    //_drawable->updateScreen();
+	_window->RenderFrame();
 }
 
 
@@ -90,7 +90,7 @@ void Client::pageThree()
     SimpReader file("./lightScene3.simp", _window, zbuffer, lightEngine);
     file.Read();
 
-   // _drawable->updateScreen();
+	_window->RenderFrame();
 }
 
 
@@ -104,7 +104,7 @@ void Client::pageFour()
     SimpReader file("./cam4.simp", _window, zbuffer, lightEngine);
     file.Read();
 
-	//_drawable->updateScreen();
+	_window->RenderFrame();
 }
 
 
@@ -118,7 +118,7 @@ void Client::pageFive()
     SimpReader file("./cam5.simp", _window, zbuffer, lightEngine);
     file.Read();
 
-	//_drawable->updateScreen();
+	_window->RenderFrame();
 }
 
 void Client::pageSix()
@@ -131,7 +131,7 @@ void Client::pageSix()
     SimpReader file("./cam6.simp", _window, zbuffer, lightEngine);
     file.Read();
 
-	//_drawable->updateScreen();
+	_window->RenderFrame();
 }
 
 void Client::pageSeven()
@@ -144,7 +144,7 @@ void Client::pageSeven()
     SimpReader file("./cam7.simp", _window, zbuffer, lightEngine);
     file.Read();
 
-	//_drawable->updateScreen();
+	_window->RenderFrame();
 }
 
 void Client::pageEight()
@@ -157,7 +157,7 @@ void Client::pageEight()
     SimpReader file("./cam8.simp", _window, zbuffer, lightEngine);
     file.Read();
 
-	//_drawable->updateScreen();
+	_window->RenderFrame();
 }
 
 void Client::RenderFromCommandLine()
@@ -170,7 +170,7 @@ void Client::RenderFromCommandLine()
     SimpReader file("./" + _filePath, _window, zbuffer, lightEngine);
     file.Read();
 
-    //_drawable->updateScreen();
+	_window->RenderFrame();
 }
 
 

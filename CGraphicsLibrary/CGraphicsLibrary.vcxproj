@@ -128,6 +128,8 @@
     <ClCompile Include="ObjReader.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Polygon.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="SimpIO.cpp" />
     <ClCompile Include="SimpReader.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Stack.cpp" />
@@ -146,6 +148,8 @@
     <ClInclude Include="ObjReader.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Polygon.h" />
+    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="SimpIO.h" />
     <ClInclude Include="SimpReader.h" />
     <ClInclude Include="SimpWriter.h" />
     <ClInclude Include="Stack.h" />
