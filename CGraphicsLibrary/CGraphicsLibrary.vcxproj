@@ -121,6 +121,7 @@
   <ItemGroup>
     <ClCompile Include="Clip.cpp" />
     <ClCompile Include="DynamicArray.cpp" />
+    <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="main.cpp" />
@@ -140,6 +141,7 @@
   <ItemGroup>
     <ClInclude Include="Clip.h" />
     <ClInclude Include="DynamicArray.h" />
+    <ClInclude Include="InputManager.h" />
     <ClInclude Include="lighting.h" />
     <ClInclude Include="Line.h" />
     <ClInclude Include="Matrix.h" />

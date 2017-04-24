@@ -12,17 +12,12 @@ zBuffer::zBuffer()
 }
 
 
-zBuffer::zBuffer(int w, int h, float Hither, float Yon,
-                 float xLow, float yLow,
-                 float xHigh, float yHigh) :
+zBuffer::zBuffer(int w, int h, float depth_near, float depth_far, Color depth_color) :
 	width(w),
 	height(h),
-    hither(Hither),
-    yon(Yon),
-    xLo(xLow),
-    yLo(yLow),
-    xHi(xHigh),
-    yHi(yHigh)
+	depthNear(depth_near),
+	depthFar(depth_far),
+	depthColor(depth_color)
 {
 	buffer = new float*[w];
 	for (int x = 0; x < w; x++)

@@ -7,6 +7,7 @@
 #include "Window.h"
 #include "SimpIO.h"
 #include "Renderer.h"
+#include "InputManager.h"
 
 
 int main(int argc, char** argv)
@@ -19,16 +20,14 @@ int main(int argc, char** argv)
 	{
 		filepath = std::string(argv[1]);
 	}
-	
-	zBuffer* zbuffer = new zBuffer(650, 650, 1.0f, 200.0f);
+
 	Lighting* lightEngine = new Lighting();
 	PolygonList* polygonData = new PolygonList();
 
-	SimpIO file("./lightScene.simp", zbuffer, lightEngine, polygonData);
+	SimpIO file("./lightScene.simp", lightEngine, polygonData);
 	RenderArgs renderParams = file.Read();
-	zbuffer = renderParams.zbuffer;
 
-	Renderer renderer(renderParams, &window, zbuffer, lightEngine, polygonData);
+	Renderer renderer(&window, lightEngine, polygonData, renderParams);
 	renderer.renderData();
 
 	bool running = true;
@@ -52,56 +51,24 @@ int main(int argc, char** argv)
 				break;
 
 			case SDL_KEYDOWN:
-				if (event.key.keysym.sym == SDLK_a)
-				{
-					renderer.UpdateCamera(CAM_INSTR::ROTATE_L);
-					update = true;
-				}
-				if (event.key.keysym.sym == SDLK_d)
-				{
-					renderer.UpdateCamera(CAM_INSTR::ROTATE_R);
-					update = true;
-				}
-				if (event.key.keysym.sym == SDLK_LEFT)
-				{
-					renderer.UpdateCamera(CAM_INSTR::TRANSLATE_L);
-					update = true;
-				}
-				if (event.key.keysym.sym == SDLK_RIGHT)
-				{
-					renderer.UpdateCamera(CAM_INSTR::TRANSLATE_R);
-					update = true;
-				}
-				if (event.key.keysym.sym == SDLK_UP)
-				{
-					renderer.UpdateCamera(CAM_INSTR::TRANSLATE_F);
-					update = true;
-				}
-				if (event.key.keysym.sym == SDLK_DOWN)
-				{
-					renderer.UpdateCamera(CAM_INSTR::TRANSLATE_B);
-					update = true;
-				}
-				if (event.key.keysym.sym == SDLK_l)
-				{
-					renderer.ToggleLighting();
-					update = true;
-				}
+				renderer.userInput.keys[event.key.keysym.sym] = true;
+				break;
+
+			case SDL_KEYUP:
+				renderer.userInput.keys[event.key.keysym.sym] = false;
 				break;
 			}
 		}
-		
-		if (update)
-		{
-			renderer.renderData();
-			update = false;
-		}
+		renderer.UpdateCamera();
 
-		// Logic
+
+		renderer.renderData();
 
 		if (1000 / FPS > SDL_GetTicks() - start) {
 			SDL_Delay(1000 / FPS - (SDL_GetTicks() - start));
 		}
+
+		std::cout << 1000.0f / (SDL_GetTicks() - start) << std::endl;
 	}
 
 	//Exit

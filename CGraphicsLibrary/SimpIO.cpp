@@ -83,8 +83,8 @@ void ReportSyntaxError(std::vector<std::string> tokens, std::string errorMsg = "
 
 
 SimpIO::SimpIO(std::string filepath,
-	zBuffer* buffer, Lighting* _LightEngine, PolygonList* polygons,
-	mat4 CTM, mat4 CAMERA,
+	Lighting* lightEngine, PolygonList* polygons,
+	mat4 CTM, mat4 CAMERA, FrustumParams f_params,
 	float depthNear, float depthFar,
 	Color_f ambientColor, Color depthColor, Color surfaceColor,
 	bool wireFrame) :
@@ -96,7 +96,8 @@ SimpIO::SimpIO(std::string filepath,
 	_depthColor(depthColor),
 	_surfaceColor(surfaceColor),
 	_CAMERA(CAMERA),
-	_polygons(polygons)
+	_polygons(polygons),
+	_frustumParams(f_params)
 {
 	_currentFile.open(filepath);
 	if (!_currentFile.is_open())
@@ -105,8 +106,8 @@ SimpIO::SimpIO(std::string filepath,
 		std::cout << "Filepath: " + filepath << std::endl;
 		exit(-1);
 	}
-	_zBuffer = buffer;
-	_lightEngine = _LightEngine;
+
+	_lightEngine = lightEngine;
 }
 
 
@@ -271,7 +272,7 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 		if (tokens.size() == 2)
 		{
 			SimpIO fileInclude("./" + tokens[1] + ".simp",
-							   _zBuffer, _lightEngine, _polygons, _CTM, _CAMERA,  _depthNear, _depthFar,
+							   _lightEngine, _polygons, _CTM, _CAMERA, _frustumParams, _depthNear, _depthFar,
 							   _ambientColor, _depthColor, _surfaceColor, _wireFrame);
 			RenderArgs modifiedVals = fileInclude.Read();
 
@@ -284,12 +285,7 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 			_depthNear = modifiedVals.depthNear;
 			_surfaceColor = modifiedVals.surfaceColor;
 			_wireFrame = modifiedVals.wireFrame;
-			_zBuffer = modifiedVals.zbuffer;
-
-			// Update other necessary parameters MIGHT NOT NEED THIS NOW?!
-			//_zBuffer->depthNear = _depthNear;
-			//_zBuffer->depthFar = _depthFar;
-			//_zBuffer->depthColor = _depthColor;
+			_frustumParams = modifiedVals.f_params;
 		}
 		else
 		{
@@ -339,15 +335,11 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 			vec4 eyePoint = vec4(0.0f, 0.0f, 0.0f, 1.0f);
 			eyePoint = _CTM * eyePoint;
 			_lightEngine->setEyePoint(eyePoint);
-
-			// Update zBuffer
-			delete _zBuffer;
-			_zBuffer = new zBuffer(650, 650, stof(tokens[5]), stof(tokens[6]),
-				stof(tokens[1]), stof(tokens[2]),
-				stof(tokens[3]), stof(tokens[4]));
-			_zBuffer->depthNear = _depthNear;
-			_zBuffer->depthFar = _depthFar;
-			_zBuffer->depthColor = _depthColor;
+			
+			// Get viewing frustum settings
+			_frustumParams = FrustumParams(stof(tokens[5]), stof(tokens[6]),
+										   stof(tokens[1]), stof(tokens[2]),
+										   stof(tokens[3]), stof(tokens[4]));
 		}
 		else
 		{
@@ -406,9 +398,6 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 		_depthColor = Color((unsigned char)(255 * stof(tokens[3])),
 							(unsigned char)(255 * stof(tokens[4])),
 							(unsigned char)(255 * stof(tokens[5])));
-		_zBuffer->depthNear = _depthNear;
-		_zBuffer->depthFar = _depthFar;
-		_zBuffer->depthColor = _depthColor;
 	}
 
 	/* ------------------------------------------------------------------------- SURFACE */
@@ -551,5 +540,5 @@ RenderArgs SimpIO::Read()
 
 	std::cout << "Done reading file." << std::endl;
 
-	return RenderArgs(_CTM, _CAMERA, _wireFrame, _depthNear, _depthFar, _ambientColor, _depthColor, _surfaceColor, _zBuffer);
+	return RenderArgs(_CTM, _CAMERA, _wireFrame, _depthNear, _depthFar, _ambientColor, _depthColor, _surfaceColor, _frustumParams);
 }

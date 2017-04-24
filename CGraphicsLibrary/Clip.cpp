@@ -14,20 +14,22 @@ Clip::~Clip()
     // Empty
 }
 
-void Clip::Init(float xLo, float yLo, float xHi, float yHi, float hither, float yon)
+void Clip::Init(FrustumParams params)
 {
-    vec4 top_L = vec4(xLo, yHi, 1.0f, 0.0f);
-    vec4 bot_L = vec4(xLo, yLo, 1.0f, 0.0f);
-    vec4 bot_R = vec4(xHi, yLo, 1.0f, 0.0f);
-    vec4 top_R = vec4(xHi, yHi, 1.0f, 0.0f);
+	parameters = params;
+
+    vec4 top_L = vec4(params.xLo, params.yHi, 1.0f, 0.0f);
+    vec4 bot_L = vec4(params.xLo, params.yLo, 1.0f, 0.0f);
+    vec4 bot_R = vec4(params.xHi, params.yLo, 1.0f, 0.0f);
+    vec4 top_R = vec4(params.xHi, params.yHi, 1.0f, 0.0f);
 
     // Build the clipping planes
-    _frustum[0] = vec4(0.0f, 0.0f, 1.0, -hither);      // Front
-    _frustum[1] = vec4(0.0f, 0.0f, -1.0, yon);         // Back
-    _frustum[2] = top_L.cross(bot_L);                   // Left
-    _frustum[3] = bot_L.cross(bot_R);                   // Bottom
-    _frustum[4] = bot_R.cross(top_R);                   // Right
-    _frustum[5] = top_R.cross(top_L);                   // Top
+    _frustum[0] = vec4(0.0f, 0.0f, 1.0, -params.hither);	// Front
+    _frustum[1] = vec4(0.0f, 0.0f, -1.0, params.yon);		// Back
+    _frustum[2] = top_L.cross(bot_L);						// Left
+    _frustum[3] = bot_L.cross(bot_R);						// Bottom
+    _frustum[4] = bot_R.cross(top_R);						// Right
+    _frustum[5] = top_R.cross(top_L);						// Top
 }
 
 void Clip::clipToFrustum(std::vector<Vertex>* vertices)
@@ -174,7 +176,7 @@ void Clip::clipPlane(std::vector<Vertex>* vertices, const vec4& plane)
                                   t * prev.pos.y + (1 - t) * (curr.pos.y),
                                   t * prev.pos.z + (1 - t) * (curr.pos.z));
 
-            clippedVec.pos_WS = computeClippedWSC(prev, curr, t);   ///ARE YOU CERTAIN THIS WORKS?!
+            clippedVec.pos_WS = computeClippedWSC(prev, curr, t);
             clippedVec.normal = computeClippedNormal(prev, curr, t);
 
             clippedVec.color = computeClippedColour(prev, curr, t);
@@ -189,7 +191,7 @@ void Clip::clipPlane(std::vector<Vertex>* vertices, const vec4& plane)
                                   t * prev.pos.y + (1 - t) * (curr.pos.y),
                                   t * prev.pos.z + (1 - t) * (curr.pos.z));
 
-            clippedVec.pos_WS = computeClippedWSC(prev, curr, t);   ///ARE YOU CERTAIN THIS WORKS?!
+            clippedVec.pos_WS = computeClippedWSC(prev, curr, t);
             clippedVec.normal = computeClippedNormal(prev, curr, t);
 
             clippedVec.color = computeClippedColour(prev, curr, t);

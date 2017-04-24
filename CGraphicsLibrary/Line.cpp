@@ -40,22 +40,6 @@ void swapPoints(vec3* p0, vec3* p1)
 }
 
 
-bool cullLine(vec4 p0, vec4 p1, zBuffer* zbuffer)
-{
-    int w = zbuffer->width - 1;
-    int h = zbuffer->height - 1;
-
-    if ((p0.x < 0 && p1.x < 0) || (p0.x > w && p1.x > w) ||
-        (p0.y < 0 && p1.y < 0) || (p0.y > h && p1.y > h) ||
-        (p0.z < zbuffer->hither && p1.z < zbuffer->hither) || (p0.z > zbuffer->yon && p1.z > zbuffer->yon))
-    {
-        return true;
-    }
-    return false;
-}
-
-
-
 /** DDA/Bresenham - Octant dependent drawing functions:
  *  To be returned as function pointers by setDrawFunctionBres(): drawLine_Oct1 - drawLine_Oct8
  */
@@ -186,11 +170,6 @@ void transformCoord(vec3 p0, int* x, int* y, Octant octant)
 // Overloaded DDA that performs perspective correct linear interpolation
 void Line::DDA(Vertex V0, Vertex V1, zBuffer* zbuffer, Window* window)
 {
-    if (cullLine(V0.pos, V1.pos, zbuffer))
-    {
-        return;
-    }
-
     // Obtain rounded vertices
     vec3 p0; p0 = V0.pos;
     vec3 p1; p1 = V1.pos;
@@ -252,13 +231,12 @@ void Line::DDA(Vertex V0, Vertex V1, zBuffer* zbuffer, Window* window)
 
         if (actualX >= 0 && actualX <= zbuffer->width - 1 &&
             actualY >= 0 && actualY <= zbuffer->height - 1 &&
-            zCurrent >= zbuffer->hither && zCurrent < zbuffer->buffer[actualX][actualY])
+            zCurrent < zbuffer->buffer[actualX][actualY])
         {
             Color color(((unsigned char)round(r / z0_prime) & 0xff),
                         ((unsigned char)round(g / z0_prime) & 0xff),
                         ((unsigned char)round(b / z0_prime) & 0xff));
             color = computeDepthShading(zCurrent, color, zbuffer);
-            //unsigned int pixelColor = packColor(color);
 
             lineFunction(p0, x, y, color, window);
             zbuffer->buffer[actualX][actualY] = zCurrent;

@@ -109,24 +109,6 @@ inline Color interpolateColor(float currDist, float totalDist, Color P0, Color P
 }
 
 
-inline bool cullTriangle(std::vector<Vertex> vertices, zBuffer* zbuffer)
-{
-    int w = zbuffer->width - 1;
-    int h = zbuffer->height - 1;
-
-    if ((vertices[0].pos.x < 0 && vertices[1].pos.x < 0 && vertices[2].pos.x < 0) ||
-        (vertices[0].pos.x > w && vertices[1].pos.x > w && vertices[2].pos.x > w) ||
-        (vertices[0].pos.y < 0 && vertices[1].pos.y < 0 && vertices[2].pos.y < 0) ||
-        (vertices[0].pos.y > h && vertices[1].pos.y > h && vertices[2].pos.y > h) ||
-        (vertices[0].pos.z < zbuffer->hither && vertices[1].pos.z < zbuffer->hither && vertices[2].pos.z < zbuffer->hither) ||
-        (vertices[0].pos.z > zbuffer->yon && vertices[1].pos.z > zbuffer->yon && vertices[2].pos.z > zbuffer->yon))
-    {
-        return true;
-    }
-    return false;
-}
-
-
 /* End helper functions ------------------------------------------------------------ */
 
 

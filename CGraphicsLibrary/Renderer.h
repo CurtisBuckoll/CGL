@@ -12,6 +12,7 @@
 #include "Clip.h"
 #include "Window.h"
 #include "SimpIO.h"
+#include "InputManager.h"
 
 enum class CAM_INSTR
 {
@@ -26,12 +27,15 @@ enum class CAM_INSTR
 class Renderer
 {
 public:
-	Renderer(RenderArgs parameters, Window* window, zBuffer* buffer, Lighting* _LightEngine, PolygonList* vertexData);
+	Renderer(Window* window, Lighting* _LightEngine, PolygonList* vertexData, RenderArgs parameters);
 	~Renderer();
 
 	void ToggleLighting();
-	void UpdateCamera(CAM_INSTR instruction);
+	void ToggleWireframe();
+	void UpdateCamera();
 	void renderData();
+
+	InputManager userInput;
 
 private:
 	Window* _window;
@@ -51,7 +55,6 @@ private:
 	mat4 _SCREEN;
 
 	PolygonList* _vertexData;
-
 	Lighting* _lightEngine;
 
 	void TransformToScreen(std::vector<Vertex>* vertices, std::vector<std::vector<Vertex>>* transformed);

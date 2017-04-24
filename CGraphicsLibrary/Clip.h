@@ -20,12 +20,12 @@ struct FrustumParams {
 		hither = yon = xLo = xHi = yLo = yHi = 0.0f;
 	}
 
-	FrustumParams(float Hither, float Yon, float XLo, float XHi, float YLo, float YHi) :
+	FrustumParams(float Hither, float Yon, float XLo, float YLo, float XHi, float YHi) :
 		hither(Hither),
 		yon(Yon),
 		xLo(XLo),
-		xHi(XHi),
 		yLo(YLo),
+		xHi(XHi),
 		yHi(YHi)
 	{
 		// Empty
@@ -42,12 +42,12 @@ private:
 	inline void clipPlane(std::vector<Vertex>* vertices, const vec4& plane);
 
 public:
-	FrustumParams dimensions;
+	FrustumParams parameters;
 
     Clip();
     ~Clip();
 
-	void Init(float xLo, float yLo, float xHi, float yHi, float hither, float yon);
+	void Init(FrustumParams params);
     bool cullToFrustum(const std::vector<Vertex>& vertices);
     void clipToFrustum(std::vector<Vertex>* vertices);
 };

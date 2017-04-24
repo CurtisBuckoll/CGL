@@ -9,7 +9,7 @@
 
 
 
-Renderer::Renderer(RenderArgs parameters, Window* window, zBuffer* buffer, Lighting* _LightEngine, PolygonList* vertexData) :
+Renderer::Renderer(Window* window, Lighting* _LightEngine, PolygonList* vertexData, RenderArgs parameters) :
 	_wireFrame(parameters.wireFrame),
 	_depthNear(parameters.depthNear),
 	_depthFar(parameters.depthFar),
@@ -20,21 +20,21 @@ Renderer::Renderer(RenderArgs parameters, Window* window, zBuffer* buffer, Light
 	_PROJ(MAT_TYPE::PROJECTION)
 {
 	_window = window;
-	_zBuffer = buffer;
 	_lightEngine = _LightEngine;
 	_CAMERA_INVERSE = mat4();
 	_vertexData = vertexData;
 
+	_zBuffer = new zBuffer(window->getWidth(), window->getHeight(), parameters.depthNear, parameters.depthFar, parameters.depthColor);
 	_frustum = Clip();
-	_frustum.Init(buffer->xLo, buffer->yLo, buffer->xHi, buffer->yHi, buffer->hither, buffer->yon);
+	_frustum.Init(parameters.f_params);
 
 	// Set up screen matrix
 	_SCREEN = mat4();
-	float uniformScaleSize = (float)std::max(_zBuffer->xHi - _zBuffer->xLo, _zBuffer->yHi - _zBuffer->yLo);
-	_SCREEN.translate((650.0f - (_zBuffer->xHi - _zBuffer->xLo) * 650.0f / uniformScaleSize) / 2.0f,
-		(650.0f - (_zBuffer->yHi - _zBuffer->yLo) * 650.0f / uniformScaleSize) / 2.0f - 1.0f, 0.0f);
+	float uniformScaleSize = (float)std::max(_frustum.parameters.xHi - _frustum.parameters.xLo, _frustum.parameters.yHi - _frustum.parameters.yLo);
+	_SCREEN.translate((650.0f - (_frustum.parameters.xHi - _frustum.parameters.xLo) * 650.0f / uniformScaleSize) / 2.0f,
+		(650.0f - (_frustum.parameters.yHi - _frustum.parameters.yLo) * 650.0f / uniformScaleSize) / 2.0f - 1.0f, 0.0f);
 	_SCREEN.scale(650.0f / uniformScaleSize, (650.0f) / uniformScaleSize, 1.0f);
-	_SCREEN.translate(-_zBuffer->xLo, -_zBuffer->yLo, 0.0f);
+	_SCREEN.translate(-_frustum.parameters.xLo, -_frustum.parameters.yLo, 0.0f);
 }
 
 
@@ -109,44 +109,74 @@ void Renderer::ToggleLighting()
 	_lightEngine->doLighting = !_lightEngine->doLighting;
 }
 
-
-void Renderer::UpdateCamera(CAM_INSTR instruction)
+void Renderer::ToggleWireframe()
 {
-	const float moveAmount = 5.0f;
-	const float rotateAmount = 15.0f;
-	mat4 updateMatrix = mat4();
+	_wireFrame = !_wireFrame;
+}
 
-	switch (instruction)
+void Renderer::UpdateCamera()
+{
+	const float moveAmount = 1.2f;
+	const float rotateAmount = 5.0f;
+
+	if (userInput.keys[SDLK_COMMA])
 	{
-	case CAM_INSTR::ROTATE_L:
+		mat4 updateMatrix = mat4();
 		updateMatrix.rotate(rotateAmount, Axis::Y);
 		_CAMERA = _CAMERA * updateMatrix;
-		break;
-
-	case CAM_INSTR::ROTATE_R:
+	}
+	
+	if (userInput.keys[SDLK_PERIOD])
+	{
+		mat4 updateMatrix = mat4();
 		updateMatrix.rotate(-rotateAmount, Axis::Y);
 		_CAMERA = _CAMERA * updateMatrix;
-		break;
-
-	case CAM_INSTR::TRANSLATE_L:
+	}
+	if (userInput.keys[SDLK_a])
+	{
+		mat4 updateMatrix = mat4();
 		updateMatrix.translate(-moveAmount, 0.0, 0.0f);
 		_CAMERA = updateMatrix * _CAMERA;
-		break;
-
-	case CAM_INSTR::TRANSLATE_R:
+	}
+	if (userInput.keys[SDLK_d])
+	{
+		mat4 updateMatrix = mat4();
 		updateMatrix.translate(moveAmount, 0.0, 0.0f);
 		_CAMERA = updateMatrix * _CAMERA;
-		break;
-
-	case CAM_INSTR::TRANSLATE_F:
+	}
+	if (userInput.keys[SDLK_w])
+	{
+		mat4 updateMatrix = mat4();
 		updateMatrix.translate(0.0f, 0.0, moveAmount);
 		_CAMERA = updateMatrix * _CAMERA;
-		break;
-
-	case CAM_INSTR::TRANSLATE_B:
+	}
+	if (userInput.keys[SDLK_s])
+	{
+		mat4 updateMatrix = mat4();
 		updateMatrix.translate(0.0f, 0.0, -moveAmount);
 		_CAMERA = updateMatrix * _CAMERA;
-		break;
+	}
+
+	static bool shouldPress = true;
+	if (userInput.keys[SDLK_l] && shouldPress)
+	{
+		ToggleLighting();
+		shouldPress = false;
+	}
+	else if (!userInput.keys[SDLK_l])
+	{
+		shouldPress = true;
+	}
+
+	static bool shouldPressWire = true;
+	if (userInput.keys[SDLK_f] && shouldPressWire)
+	{
+		ToggleWireframe();
+		shouldPressWire = false;
+	}
+	else if (!userInput.keys[SDLK_f])
+	{
+		shouldPressWire = true;
 	}
 
 	vec4 eyePoint = vec4(0.0f, 0.0f, 0.0f, 1.0f);
