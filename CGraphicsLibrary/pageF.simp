@@ -1,0 +1,28 @@
+{
+
+gouraud
+	ambient 1 1 0.5
+	{
+		translate 0 5 42
+		#rotate Y -55
+		#rotate X -20
+		camera  -1 -1 1 1 0.1 40
+		depth 0 40 (0 0 0)
+	}
+
+	#Light
+	{
+		translate 17, 5, 45
+		light 1.2 1.2 1.2 0.8 0.8
+	}
+	
+	{
+        surface 1 1 1 1 40
+		polygon (-1000, 0, -1000) (1000, 0, -1000) (1000, 0, 1000)
+		polygon (-1000, 0, -1000) (1000, 0, 1000) (-1000, 0, 1000)
+	}
+	{
+		translate 0 0 20
+		file "stripeGrid"
+	}
+}

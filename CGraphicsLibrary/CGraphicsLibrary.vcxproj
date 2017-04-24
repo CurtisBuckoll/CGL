@@ -179,6 +179,7 @@
     <None Include="niceCubeline.simp" />
     <None Include="page4.simp" />
     <None Include="page5.simp" />
+    <None Include="pageF.simp" />
     <None Include="README.md" />
     <None Include="sphere.simp" />
     <None Include="test.simp" />

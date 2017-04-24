@@ -24,7 +24,7 @@ int main(int argc, char** argv)
 	Lighting* lightEngine = new Lighting();
 	PolygonList* polygonData = new PolygonList();
 
-	SimpIO file("./lightScene.simp", lightEngine, polygonData);
+	SimpIO file("./pageF.simp", lightEngine, polygonData);
 	RenderArgs renderParams = file.Read();
 
 	Renderer renderer(&window, lightEngine, polygonData, renderParams);

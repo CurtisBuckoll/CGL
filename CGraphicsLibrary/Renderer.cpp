@@ -35,6 +35,10 @@ Renderer::Renderer(Window* window, Lighting* _LightEngine, PolygonList* vertexDa
 		(650.0f - (_frustum.parameters.yHi - _frustum.parameters.yLo) * 650.0f / uniformScaleSize) / 2.0f - 1.0f, 0.0f);
 	_SCREEN.scale(650.0f / uniformScaleSize, (650.0f) / uniformScaleSize, 1.0f);
 	_SCREEN.translate(-_frustum.parameters.xLo, -_frustum.parameters.yLo, 0.0f);
+
+
+	_forward = vec4(0.0f, 0.0f, 1.0f, 0.0f);
+	_right = vec4(1.0f, 0.0f, 0.0f, 0.0f);
 }
 
 
@@ -116,14 +120,19 @@ void Renderer::ToggleWireframe()
 
 void Renderer::UpdateCamera()
 {
-	const float moveAmount = 1.2f;
-	const float rotateAmount = 5.0f;
+	const float moveAmount = 0.8f;
+	const float rotateAmount = 10.0f;
 
 	if (userInput.keys[SDLK_COMMA])
 	{
 		mat4 updateMatrix = mat4();
 		updateMatrix.rotate(rotateAmount, Axis::Y);
 		_CAMERA = _CAMERA * updateMatrix;
+		mat4 uMatrix_inv = updateMatrix.inverse();
+		_forward = _forward * uMatrix_inv;
+		_right = _right * uMatrix_inv;
+		_forward.normalize();
+		_right.normalize();
 	}
 	
 	if (userInput.keys[SDLK_PERIOD])
@@ -131,29 +140,38 @@ void Renderer::UpdateCamera()
 		mat4 updateMatrix = mat4();
 		updateMatrix.rotate(-rotateAmount, Axis::Y);
 		_CAMERA = _CAMERA * updateMatrix;
+		mat4 uMatrix_inv = updateMatrix.inverse();
+		_forward = _forward * uMatrix_inv;
+		_right = _right * uMatrix_inv;
+		_forward.normalize();
+		_right.normalize();
 	}
 	if (userInput.keys[SDLK_a])
 	{
 		mat4 updateMatrix = mat4();
-		updateMatrix.translate(-moveAmount, 0.0, 0.0f);
+		vec4 dir = _right * -moveAmount;
+		updateMatrix.translate(dir.x, dir.y, dir.z);
 		_CAMERA = updateMatrix * _CAMERA;
 	}
 	if (userInput.keys[SDLK_d])
 	{
 		mat4 updateMatrix = mat4();
-		updateMatrix.translate(moveAmount, 0.0, 0.0f);
+		vec4 dir = _right * moveAmount;
+		updateMatrix.translate(dir.x, dir.y, dir.z);
 		_CAMERA = updateMatrix * _CAMERA;
 	}
 	if (userInput.keys[SDLK_w])
 	{
 		mat4 updateMatrix = mat4();
-		updateMatrix.translate(0.0f, 0.0, moveAmount);
+		vec4 dir = _forward * moveAmount;
+		updateMatrix.translate(dir.x, dir.y, dir.z);
 		_CAMERA = updateMatrix * _CAMERA;
 	}
 	if (userInput.keys[SDLK_s])
 	{
 		mat4 updateMatrix = mat4();
-		updateMatrix.translate(0.0f, 0.0, -moveAmount);
+		vec4 dir = _forward * -moveAmount;
+		updateMatrix.translate(dir.x, dir.y, dir.z);
 		_CAMERA = updateMatrix * _CAMERA;
 	}
 

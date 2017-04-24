@@ -54,6 +54,9 @@ private:
 	mat4 _PROJ;
 	mat4 _SCREEN;
 
+	vec4 _forward;
+	vec4 _right;
+
 	PolygonList* _vertexData;
 	Lighting* _lightEngine;
 

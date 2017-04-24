@@ -217,5 +217,8 @@
     <None Include="z0_face.simp">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="pageF.simp">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
