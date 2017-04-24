@@ -44,7 +44,7 @@ Color Lighting::ComputeVertexShadingColor(Color objectColor)
     Color_f result = object_fl;
     result = result * _ambient;
 
-    for (int i = 0; i < _lightSources.size(); i++)
+    for (unsigned int i = 0; i < _lightSources.size(); i++)
     {
         // Light does not hit face if 0
         if (_lightSources[i].diffuse <= 0) { continue; }
@@ -86,6 +86,7 @@ Lighting::Lighting()
     _k_s = 0.3f;
     _p = 8;
     _ambient = Color_f(0.0f, 0.0f, 0.0f);
+	doLighting = true;
 }
 
 
@@ -130,6 +131,8 @@ void Lighting::addLightSource(const vec4& pos, float A, float B, const Color_f& 
 
 void Lighting::init(std::vector<Vertex>* vertices)
 {
+	if (!doLighting) { return; }
+
     if (vertices->size() != 3)
     {
         std::cout << "Wrong vertex array size for lighting init.. Does not equal 3" << std::endl;
@@ -140,8 +143,6 @@ void Lighting::init(std::vector<Vertex>* vertices)
     vec4 V;
     vec4 centerPos;
 
-
-
     switch (_model)
     {
     /* ------------------------------------------------------------------------ FLAT */
@@ -150,7 +151,7 @@ void Lighting::init(std::vector<Vertex>* vertices)
         // Compute center of polygon and average normal N to the face
         centerPos = vec4(0.0f, 0.0f, 0.0f, 0.0f);
         N = vec4(0.0f, 0.0f, 0.0f, 0.0f);
-        for (int i = 0; i < vertices->size(); i++)
+        for (unsigned int i = 0; i < vertices->size(); i++)
         {
             centerPos = centerPos + (*vertices)[i].pos_WS;
             N = N + (*vertices)[i].normal;
@@ -163,7 +164,7 @@ void Lighting::init(std::vector<Vertex>* vertices)
         V = _eyepoint - centerPos;
         V.normalize();
 
-        for (int i  = 0; i < _lightSources.size(); i++)
+        for (unsigned int i  = 0; i < _lightSources.size(); i++)
         {
             vec4 L = _lightSources[i].position - centerPos;
             float dist = L.length();
@@ -174,6 +175,11 @@ void Lighting::init(std::vector<Vertex>* vertices)
             R.normalize();
 
             _lightSources[i].diffuse = N.dot(L);
+
+			// Clamp V.R if < 0
+			float VdotR = V.dot(R);
+			if (VdotR < 0.0f) { VdotR = 0.0f; }
+
             _lightSources[i].specular = _k_s * pow(V.dot(R), _p);
         }
 
@@ -186,7 +192,7 @@ void Lighting::init(std::vector<Vertex>* vertices)
     /* --------------------------------------------------------------------- GOURAUD */
     case LIGHTMODEL::GOURAUD :
 
-        for (int n = 0; n < vertices->size(); n++)
+        for (unsigned int n = 0; n < vertices->size(); n++)
         {
             N = (*vertices)[n].normal;
             N.normalize();
@@ -197,8 +203,7 @@ void Lighting::init(std::vector<Vertex>* vertices)
             V = _eyepoint - vertexPos;
             V.normalize();
 
-
-            for (int i  = 0; i < _lightSources.size(); i++)
+            for (unsigned int i  = 0; i < _lightSources.size(); i++)
             {
                 vec4 L = _lightSources[i].position - vertexPos;
                 float dist = L.length();
@@ -209,6 +214,11 @@ void Lighting::init(std::vector<Vertex>* vertices)
                 R.normalize();
 
                 _lightSources[i].diffuse = N.dot(L);
+
+				// Clamp V.R if < 0
+				float VdotR = V.dot(R);
+				if (VdotR < 0.0f) { VdotR = 0.0f; }
+
                 _lightSources[i].specular = _k_s * pow(V.dot(R), _p);
             }
             (*vertices)[n].color = ComputeVertexShadingColor((*vertices)[n].color);
@@ -226,8 +236,10 @@ void Lighting::init(std::vector<Vertex>* vertices)
 }
 
 
-Color Lighting::PerformLightingCalculation(Color objectColor, vec4 N, vec4 vertexPos)
+Color Lighting::PerformLightingCalculation(Color objectColor, vec4& N, vec4& vertexPos)
 {
+	if (!doLighting) { return objectColor; }
+
     Color_f object_fl = objectColor.convertToFloat();
     Color_f result = object_fl;
     result = result * _ambient;
@@ -253,7 +265,7 @@ Color Lighting::PerformLightingCalculation(Color objectColor, vec4 N, vec4 verte
         V = _eyepoint - vertexPos;
         V.normalize();
 
-        for (int i  = 0; i < _lightSources.size(); i++)
+        for (unsigned int i  = 0; i < _lightSources.size(); i++)
         {
             vec4 L = _lightSources[i].position - vertexPos;
             float dist = L.length();
@@ -264,6 +276,11 @@ Color Lighting::PerformLightingCalculation(Color objectColor, vec4 N, vec4 verte
             R.normalize();
 
             _lightSources[i].diffuse = N.dot(L);
+
+			// Clamp V.R if < 0
+			float VdotR = V.dot(R);
+			if (VdotR < 0.0f) { VdotR = 0.0f; }
+
             _lightSources[i].specular = _k_s * pow(V.dot(R), _p);
         }
 
@@ -274,17 +291,6 @@ Color Lighting::PerformLightingCalculation(Color objectColor, vec4 N, vec4 verte
     default :
         return objectColor;
     }
-
-
-    /*
-    if (result.r > 1.0f) {result.r = 1.0f;}
-    if (result.g > 1.0f) {result.g = 1.0f;}
-    if (result.b > 1.0f) {result.b = 1.0f;}
-
-    return Color((unsigned char)(255 * result.r),
-                 (unsigned char)(255 * result.g),
-                 (unsigned char)(255 * result.b));
-     */
 }
 
 

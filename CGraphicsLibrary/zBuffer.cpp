@@ -1,6 +1,7 @@
 #include "zBuffer.h"
 
 #include <iostream>
+#include <limits>
 
 
 zBuffer::zBuffer()
@@ -29,7 +30,7 @@ zBuffer::zBuffer(int w, int h, float Hither, float Yon,
 		buffer[x] = new float[h];
 		for (int y = 0; y < h; y++)
 		{
-            buffer[x][y] = Yon;
+			buffer[x][y] = std::numeric_limits<float>::max();
 		}
 	}
 }
@@ -83,7 +84,7 @@ void zBuffer::reset()
 	{
 		for (int y = 0; y < height; y++)
 		{
-			buffer[x][y] = yon;
+			buffer[x][y] = std::numeric_limits<float>::max();
 		}
 	}
 }

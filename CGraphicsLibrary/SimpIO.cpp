@@ -18,8 +18,6 @@ void SimpIO::TransformToWorld(const DynamicArray<Vertex>& vertices, std::vector<
 		Vertex newVertex = vertices[i];
 		newVertex.pos.hgDivision();
 		newVertex.pos_WS = _CTM * newVertex.pos;
-		//newVertex.pos_WS.print();
-		//newVertex.pos = _CAMERA * newVertex.pos_WS;
 
 		// Transform the normal with respect to WSC, if a nonzero normal provided
 		if (newVertex.normal != vec4(0.0f, 0.0f, 0.0f, 0.0f))
@@ -38,8 +36,9 @@ void SimpIO::TransformToWorld(const DynamicArray<Vertex>& vertices, std::vector<
 	{
 		faceNormal = cross(vertexList[2].pos_WS, vertexList[1].pos_WS, vertexList[0].pos_WS);
 	}
+
 	// Provide a default face normal to a vertex if one is not specified
-	for (int i = 0; i < vertexList.size(); i++)
+	for (unsigned int i = 0; i < vertexList.size(); i++)
 	{
 		if (vertexList[i].normal == vec4(0.0f, 0.0f, 0.0f, 0.0f))
 		{
@@ -50,28 +49,6 @@ void SimpIO::TransformToWorld(const DynamicArray<Vertex>& vertices, std::vector<
 	}
 
 	transformed->push_back(vertexList);
-}
-
-
-void SimpIO::scaleToScreen(vec4* vertex)
-{
-	if (vertex->x < 0)
-	{
-		vertex->x *= (float)_zBuffer->width / (2 * fabs(_zBuffer->xLo));
-	}
-	else
-	{
-		vertex->x *= (float)_zBuffer->width / (2 * fabs(_zBuffer->xHi));
-	}
-
-	if (vertex->y < 0)
-	{
-		vertex->y *= (float)_zBuffer->height / (2 * fabs(_zBuffer->yLo));
-	}
-	else
-	{
-		vertex->y *= (float)_zBuffer->height / (2 * fabs(_zBuffer->yHi));
-	}
 }
 
 
@@ -87,7 +64,7 @@ Color SimpIO::computeAmbientLight(Color color)
 void ReportSyntaxError(std::vector<std::string> tokens, std::string errorMsg = "")
 {
 	std::cout << "Encountered syntax error in .simp script in the following line:" << std::endl;
-	for (int i = 0; i < tokens.size(); i++)
+	for (unsigned int i = 0; i < tokens.size(); i++)
 	{
 		std::cout << tokens[i] << " ";
 	}
@@ -105,23 +82,20 @@ void ReportSyntaxError(std::vector<std::string> tokens, std::string errorMsg = "
 /* End helper functions ------------------------------------------------------------ */
 
 
-SimpIO::SimpIO(std::string filepath, Window* window,
+SimpIO::SimpIO(std::string filepath,
 	zBuffer* buffer, Lighting* _LightEngine, PolygonList* polygons,
-	mat4 CTM, mat4 CAMERA, mat4 SCREEN,
+	mat4 CTM, mat4 CAMERA,
 	float depthNear, float depthFar,
 	Color_f ambientColor, Color depthColor, Color surfaceColor,
 	bool wireFrame) :
 	_wireFrame(wireFrame),
 	_CTM(CTM),
-	_windowSpaceMultiplier(3.25f),
 	_depthNear(depthNear),
 	_depthFar(depthFar),
 	_ambientColor(ambientColor),
 	_depthColor(depthColor),
 	_surfaceColor(surfaceColor),
 	_CAMERA(CAMERA),
-	_PROJ(MAT_TYPE::PROJECTION),
-	_SCREEN(SCREEN),
 	_polygons(polygons)
 {
 	_currentFile.open(filepath);
@@ -131,12 +105,8 @@ SimpIO::SimpIO(std::string filepath, Window* window,
 		std::cout << "Filepath: " + filepath << std::endl;
 		exit(-1);
 	}
-	_window = window;
 	_zBuffer = buffer;
 	_lightEngine = _LightEngine;
-
-	_frustum = Clip();
-	_frustum.Init(buffer->xLo, buffer->yLo, buffer->xHi, buffer->yHi, buffer->hither, buffer->yon);
 }
 
 
@@ -224,16 +194,16 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 		{
 			vec4 pos1 = vec4(stof(tokens[1]), stof(tokens[2]), stof(tokens[3]));
 			Color c1 = Color((unsigned char)(255 * stof(tokens[4])),
-				(unsigned char)(255 * stof(tokens[5])),
-				(unsigned char)(255 * stof(tokens[6])));
+							 (unsigned char)(255 * stof(tokens[5])),
+							 (unsigned char)(255 * stof(tokens[6])));
 			Vertex v1 = Vertex(pos1, pos1, vec4(0.0f, 0.0f, 0.0f, 0.0f), c1);
 			v1.color = computeAmbientLight(v1.color);
 			vertices.append(v1);
 
 			vec4 pos2 = vec4(stof(tokens[7]), stof(tokens[8]), stof(tokens[9]));
 			Color c2 = Color((unsigned char)(255 * stof(tokens[10])),
-				(unsigned char)(255 * stof(tokens[11])),
-				(unsigned char)(255 * stof(tokens[12])));
+							 (unsigned char)(255 * stof(tokens[11])),
+							 (unsigned char)(255 * stof(tokens[12])));
 			Vertex v2 = Vertex(pos2, pos2, vec4(0.0f, 0.0f, 0.0f, 0.0f), c2);
 			v2.color = computeAmbientLight(v2.color);
 			vertices.append(v2);
@@ -244,10 +214,9 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 		}
 
 		std::vector<std::vector<Vertex>> transformedVertices;
-
 		TransformToWorld(vertices, &transformedVertices);
 
-		for (int i = 0; i < transformedVertices.size(); i++)
+		for (unsigned int i = 0; i < transformedVertices.size(); i++)
 		{
 			if (transformedVertices[i].size() == 2)
 			{
@@ -262,7 +231,7 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 		DynamicArray<Vertex> vertices;
 		if (tokens.size() == 10)
 		{
-			for (int i = 1; i < tokens.size(); i += 3)
+			for (unsigned int i = 1; i < tokens.size(); i += 3)
 			{
 				vec4 position = vec4(stof(tokens[i]), stof(tokens[i + 1]), stof(tokens[i + 2]));
 				Vertex vertex = Vertex(position, position, vec4(0.0f, 0.0f, 0.0f, 0.0f), _surfaceColor);
@@ -271,12 +240,12 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 		}
 		else if (tokens.size() == 19)
 		{
-			for (int i = 1; i < tokens.size(); i += 6)
+			for (unsigned int i = 1; i < tokens.size(); i += 6)
 			{
 				vec4 position = vec4(stof(tokens[i]), stof(tokens[i + 1]), stof(tokens[i + 2]));
 				Color color = Color((unsigned char)(255 * stof(tokens[i + 3])),
-					(unsigned char)(255 * stof(tokens[i + 4])),
-					(unsigned char)(255 * stof(tokens[i + 5])));
+									(unsigned char)(255 * stof(tokens[i + 4])),
+									(unsigned char)(255 * stof(tokens[i + 5])));
 				Vertex vertex = Vertex(position, position, vec4(0.0f, 0.0f, 0.0f, 0.0f), color);
 				vertices.append(vertex);
 			}
@@ -290,9 +259,8 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 
 		TransformToWorld(vertices, &transformedVertices);
 
-		for (int j = 0; j < transformedVertices.size(); j++)
+		for (unsigned int j = 0; j < transformedVertices.size(); j++)
 		{
-			//_lightEngine->init(&transformedVertices[j]);
 			_polygons->append(transformedVertices[j]);
 		}
 	}
@@ -302,11 +270,10 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 	{
 		if (tokens.size() == 2)
 		{
-			SimpIO fileInclude("./" + tokens[1] + ".simp", _window,
-				_zBuffer, _lightEngine, _polygons, _CTM, _CAMERA, _SCREEN, _depthNear, _depthFar,
-				_ambientColor, _depthColor, _surfaceColor, _wireFrame);
-			SimpIOArgs modifiedVals = fileInclude.Read();
-
+			SimpIO fileInclude("./" + tokens[1] + ".simp",
+							   _zBuffer, _lightEngine, _polygons, _CTM, _CAMERA,  _depthNear, _depthFar,
+							   _ambientColor, _depthColor, _surfaceColor, _wireFrame);
+			RenderArgs modifiedVals = fileInclude.Read();
 
 			// Set any parameters modifed by the simp file
 			_ambientColor = modifiedVals.ambientColor;
@@ -320,9 +287,9 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 			_zBuffer = modifiedVals.zbuffer;
 
 			// Update other necessary parameters MIGHT NOT NEED THIS NOW?!
-			_zBuffer->depthNear = _depthNear;
-			_zBuffer->depthFar = _depthFar;
-			_zBuffer->depthColor = _depthColor;
+			//_zBuffer->depthNear = _depthNear;
+			//_zBuffer->depthFar = _depthFar;
+			//_zBuffer->depthColor = _depthColor;
 		}
 		else
 		{
@@ -381,8 +348,6 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 			_zBuffer->depthNear = _depthNear;
 			_zBuffer->depthFar = _depthFar;
 			_zBuffer->depthColor = _depthColor;
-			_frustum.Init(_zBuffer->xLo, _zBuffer->yLo, _zBuffer->xHi, _zBuffer->yHi, _zBuffer->hither, _zBuffer->yon);
-			_SCREEN.translate(((float)_zBuffer->width / 2), ((float)_zBuffer->height / 2), 0.0f);
 		}
 		else
 		{
@@ -396,43 +361,33 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 		std::vector<Vertex> vertices;
 		std::vector<vec4> normals;
 		std::vector<face> faces;
-		_invCTM = _CTM.inverse(); // This is here for efficiency, only need to compute once.
+		_invCTM = _CTM.inverse();
 
 		// Populate the lists with .obj data
 		ObjReader object("./" + tokens[1] + ".obj", &vertices, &normals, &faces, _surfaceColor);
 		object.Read();
 
 		// Render the data
-		for (int i = 0; i < faces.size(); i++)
+		for (unsigned int i = 0; i < faces.size(); i++)
 		{
 			DynamicArray<Vertex> vertexList;
-			for (int k = 0; k < faces[i].vertices.size(); k++)
+			for (unsigned int k = 0; k < faces[i].vertices.size(); k++)
 			{
 				Vertex currVertex = vertices[faces[i].vertices[k].vIndex];
 				currVertex.normal = normals[faces[i].vertices[k].nIndex];
 				vertexList.append(currVertex);
-
-				//currVertex.pos.print();
 			}
-			std::vector<std::vector<Vertex>> transformedVertices;
 
+			std::vector<std::vector<Vertex>> transformedVertices;
 			TransformToWorld(vertexList, &transformedVertices);
 
-			for (int j = 0; j < transformedVertices.size(); j++)
+			for (unsigned int j = 0; j < transformedVertices.size(); j++)
 			{
-				if (transformedVertices[j].size() >= 2)
+				if (transformedVertices[j].size() >= 3)
 				{
-					//Line::DDA(transformedVertices[j][0], transformedVertices[j][1], _zBuffer, _window);
 					_polygons->append(transformedVertices[j]);
 				}
-				//else if (transformedVertices[j].size() >= 3)
-				//{
-				//	_lightEngine->init(&transformedVertices[j]);
-				//	Polygon::drawPolygonLERP(transformedVertices[j], 1.0f, _wireFrame, _zBuffer, _window, _lightEngine);
-				//}
 			}
-
-
 		}
 	}
 
@@ -449,8 +404,8 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 		_depthNear = stof(tokens[1]);
 		_depthFar = stof(tokens[2]);
 		_depthColor = Color((unsigned char)(255 * stof(tokens[3])),
-			(unsigned char)(255 * stof(tokens[4])),
-			(unsigned char)(255 * stof(tokens[5])));
+							(unsigned char)(255 * stof(tokens[4])),
+							(unsigned char)(255 * stof(tokens[5])));
 		_zBuffer->depthNear = _depthNear;
 		_zBuffer->depthFar = _depthFar;
 		_zBuffer->depthColor = _depthColor;
@@ -522,7 +477,7 @@ void splitStrings(const std::string& currLine, std::vector<std::string>* tokens)
 {
 	std::string word;
 
-	for (int i = 0; i < currLine.size(); i++)
+	for (unsigned int i = 0; i < currLine.size(); i++)
 	{
 		if (currLine[i] != ' ' && currLine[i] != '\t' && currLine[i] != '\n' && currLine[i] != '\r')
 		{
@@ -542,7 +497,7 @@ void splitStrings(const std::string& currLine, std::vector<std::string>* tokens)
 	}
 
 	// Remove erroneous syntax
-	for (int i = 0; i < tokens->size(); i++)
+	for (unsigned int i = 0; i < tokens->size(); i++)
 	{
 		if ((*tokens)[i][0] == '(' || (*tokens)[i][0] == '"')
 		{
@@ -558,7 +513,7 @@ void splitStrings(const std::string& currLine, std::vector<std::string>* tokens)
 }
 
 
-SimpIOArgs SimpIO::Read()
+RenderArgs SimpIO::Read()
 {
 	std::cout << "Reading vertex data.." << std::endl;
 
@@ -575,7 +530,7 @@ SimpIOArgs SimpIO::Read()
 		getline(_currentFile, currLine);
 
 		// Strip away commas
-		for (int i = 0; i < currLine.size(); i++)
+		for (unsigned int i = 0; i < currLine.size(); i++)
 		{
 			if (currLine[i] == ',')
 			{
@@ -596,5 +551,5 @@ SimpIOArgs SimpIO::Read()
 
 	std::cout << "Done reading file." << std::endl;
 
-	return SimpIOArgs(_CTM, _CAMERA, _wireFrame, _depthNear, _depthFar, _ambientColor, _depthColor, _surfaceColor, _zBuffer);
+	return RenderArgs(_CTM, _CAMERA, _wireFrame, _depthNear, _depthFar, _ambientColor, _depthColor, _surfaceColor, _zBuffer);
 }

@@ -14,12 +14,15 @@ private:
 	std::vector<unsigned char> _pixels;
 
 
-	unsigned int _width;
-	unsigned int _height;
+	int _width;
+	int _height;
 
 public:
 	Window();
 	~Window();
+
+	int getWidth();
+	int getHeight();
 
 	void init();
 	void clearBackground();

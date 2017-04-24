@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+
 Window::Window()
 {
 	_window = nullptr;
@@ -9,11 +10,13 @@ Window::Window()
 	_texture = nullptr;
 }
 
+
 Window::~Window()
 {
 	SDL_DestroyRenderer(_renderer);
 	SDL_DestroyWindow(_window);
 }
+
 
 void Window::init()
 {
@@ -38,6 +41,7 @@ void Window::clearBackground()
 	SDL_RenderClear(_renderer);
 }
 
+
 void Window::RenderFrame()
 {
 	SDL_SetRenderDrawColor(_renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
@@ -53,7 +57,7 @@ void Window::RenderFrame()
 
 void Window::setPixel(int x, int y, Color color)
 {
-	int Y = -(y - (int)_height);
+	int Y = -(y - _height + 1);
 	int offset = (_width * 4 * Y) + x * 4;
 	if (offset >= _pixels.size())
 	{
@@ -64,4 +68,16 @@ void Window::setPixel(int x, int y, Color color)
 	_pixels[offset + 1] = color.g;       
 	_pixels[offset + 2] = color.b;       
 	_pixels[offset + 3] = SDL_ALPHA_OPAQUE;
+}
+
+
+int Window::getWidth()
+{
+	return _width;
+}
+
+
+int Window::getHeight()
+{
+	return _height;
 }

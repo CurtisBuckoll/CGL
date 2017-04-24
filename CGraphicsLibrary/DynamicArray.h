@@ -18,8 +18,6 @@ public:
 	void clear();
     int length() const;
 	void swapIndices(int x, int y);
-	void print();
-	void pointArrayTest();
 
     T operator[](int index) const
 	{

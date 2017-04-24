@@ -32,6 +32,7 @@ struct Vertex
 {
     vec4 pos;
     vec4 pos_WS;
+
     // Integer vec 3 containing rounded vertex coordinates
     vec3 pos_CS;
 
@@ -40,7 +41,6 @@ struct Vertex
 
     Vertex();
     Vertex(const vec4& Pos, const vec4& Pos_worldSpace, const vec4& Normal, Color Colour);
-
     void EnableCSCoords();
     void print();
 };

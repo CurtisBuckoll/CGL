@@ -11,7 +11,7 @@
 void ReportSytaxErrorObj(std::vector<std::string> tokens, std::string errorMsg = "")
 {
     std::cout << "Encountered syntax error in .obj script in the following line:" << std::endl;
-    for (int i = 0; i < tokens.size(); i++)
+    for (unsigned int i = 0; i < tokens.size(); i++)
     {
         std::cout << tokens[i] << " ";
     }
@@ -30,20 +30,20 @@ void ReportSytaxErrorObj(std::vector<std::string> tokens, std::string errorMsg =
 void ObjReader::PrintArrayInfo()
 {
     std::cout << std::endl;
-    for (int i = 0; i < _normals->size(); i++)
+    for (unsigned int i = 0; i < _normals->size(); i++)
     {
         (*_normals)[i].print();
     }
     std::cout << std::endl;
-    for (int i = 0; i < _vertices->size(); i++)
+    for (unsigned int i = 0; i < _vertices->size(); i++)
     {
         (*_vertices)[i].pos.print();
     }
 
     // print face reading
-    for (int k = 0; k < _faces->size(); k++)
+    for (unsigned int k = 0; k < _faces->size(); k++)
     {
-        for (int j = 0; j < (*_faces)[k].vertices.size(); j++)
+        for (unsigned int j = 0; j < (*_faces)[k].vertices.size(); j++)
         {
              std::cout << (*_faces)[k].vertices[j].vIndex << " "
                        << (*_faces)[k].vertices[j].nIndex << std::endl;
@@ -108,7 +108,7 @@ int ObjReader::absoluteIndex_normal(int index)
 face ObjReader::splitFaceInstr(const std::vector<std::string>& tokens)
 {
     face currFace;
-    for (int i = 1; i < tokens.size(); i++)
+    for (unsigned int i = 1; i < tokens.size(); i++)
     {
         vDescrip currVertex;
         std::string value = "";
@@ -232,7 +232,7 @@ void ObjReader::InterpretLineObj(const std::vector<std::string>& tokens)
         // split non triangular polygons into triangles.
         if (Face.vertices.size() > 3)
         {
-            for (int i = 1; i < Face.vertices.size() - 1; i++)
+            for (unsigned int i = 1; i < Face.vertices.size() - 1; i++)
             {
                 face triangle;
                 triangle.vertices.push_back(Face.vertices[0]);
@@ -255,7 +255,7 @@ void splitStringObj(const std::string& currLine, std::vector<std::string>* token
 {
     std::string word;
 
-    for (int i = 0; i < currLine.size(); i++)
+    for (unsigned int i = 0; i < currLine.size(); i++)
     {
         if (currLine[i] != ' ' && currLine[i] != '\t' && currLine[i] != '\n' && currLine[i] != '\r')
         {

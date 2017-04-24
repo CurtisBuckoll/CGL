@@ -19,41 +19,41 @@ enum class CAM_INSTR
 	ROTATE_R,
 	TRANSLATE_L,
 	TRANSLATE_R,
+	TRANSLATE_F,
+	TRANSLATE_B
 };
 
 class Renderer
 {
 public:
-	Renderer(SimpIOArgs parameters, Window* window, zBuffer* buffer, Lighting* _LightEngine, PolygonList* vertexData);
+	Renderer(RenderArgs parameters, Window* window, zBuffer* buffer, Lighting* _LightEngine, PolygonList* vertexData);
 	~Renderer();
 
+	void ToggleLighting();
 	void UpdateCamera(CAM_INSTR instruction);
 	void renderData();
 
 private:
 	Window* _window;
 	bool _wireFrame;
-	mat4 _SCREEN;
-	Stack<mat4> _matrixStack;
-	std::ifstream _currentFile;
-	const float _windowSpaceMultiplier;
 	zBuffer* _zBuffer;
+	Clip _frustum;
 
 	float _depthNear;
 	float _depthFar;
 	Color_f _ambientColor;
 	Color _depthColor;
 	Color _surfaceColor;
+
 	mat4 _CAMERA;
 	mat4 _CAMERA_INVERSE;
 	mat4 _PROJ;
-	Clip _frustum;
+	mat4 _SCREEN;
+
 	PolygonList* _vertexData;
 
 	Lighting* _lightEngine;
 
-	//void transformVertices(vec4 vertex, vec4* WS_Coord, vec4* SS_Coord);
-	void scaleToScreen(vec4* vertex);
 	void TransformToScreen(std::vector<Vertex>* vertices, std::vector<std::vector<Vertex>>* transformed);
 };
 

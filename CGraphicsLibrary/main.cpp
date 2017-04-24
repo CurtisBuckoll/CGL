@@ -5,7 +5,6 @@
 #include <SDL/SDL_render.h>
 
 #include "Window.h"
-#include "client.h"
 #include "SimpIO.h"
 #include "Renderer.h"
 
@@ -20,42 +19,20 @@ int main(int argc, char** argv)
 	{
 		filepath = std::string(argv[1]);
 	}
-
-	//Client client(&window, filepath);
-	//client.nextPage();
-
 	
 	zBuffer* zbuffer = new zBuffer(650, 650, 1.0f, 200.0f);
 	Lighting* lightEngine = new Lighting();
 	PolygonList* polygonData = new PolygonList();
 
-	SimpIO file("./lightScene.simp", &window, zbuffer, lightEngine, polygonData);
-	SimpIOArgs renderParams = file.Read();
+	SimpIO file("./lightScene.simp", zbuffer, lightEngine, polygonData);
+	RenderArgs renderParams = file.Read();
 	zbuffer = renderParams.zbuffer;
-
-	for (int i = 0; i < polygonData->vertices.size(); i++)
-	{
-		for (int j = 0; j < polygonData->vertices[i].size(); j++)
-		{
-			//polygonData->vertices[i][j].pos_WS.print();
-		}
-	}
 
 	Renderer renderer(renderParams, &window, zbuffer, lightEngine, polygonData);
 	renderer.renderData();
 
-	//window.RenderFrame();
-	
-	
-
-
 	bool running = true;
 	const int FPS = 30;
-	for (int i = 0; i < 100; i += 1) 
-	{
-		window.setPixel(i, 5, Color(255, 0, 0));
-	}
-
 
 
 	// Keep window open
@@ -93,6 +70,21 @@ int main(int argc, char** argv)
 				if (event.key.keysym.sym == SDLK_RIGHT)
 				{
 					renderer.UpdateCamera(CAM_INSTR::TRANSLATE_R);
+					update = true;
+				}
+				if (event.key.keysym.sym == SDLK_UP)
+				{
+					renderer.UpdateCamera(CAM_INSTR::TRANSLATE_F);
+					update = true;
+				}
+				if (event.key.keysym.sym == SDLK_DOWN)
+				{
+					renderer.UpdateCamera(CAM_INSTR::TRANSLATE_B);
+					update = true;
+				}
+				if (event.key.keysym.sym == SDLK_l)
+				{
+					renderer.ToggleLighting();
 					update = true;
 				}
 				break;

@@ -47,6 +47,8 @@ private:
     Color ComputeVertexShadingColor(Color objectColor);
 
 public:
+	bool doLighting;
+
     Lighting();
     ~Lighting();
 
@@ -57,7 +59,7 @@ public:
     void addLightSource(const vec4& pos, float A, float B, const Color_f& intensity);
 
     void init(std::vector<Vertex>* vertices);
-    Color Lighting::PerformLightingCalculation(Color objectColor, vec4 N, vec4 vertexPos);
+    Color Lighting::PerformLightingCalculation(Color objectColor, vec4& N, vec4& vertexPos);
     
 };
 
