@@ -1,4 +1,22 @@
-﻿  main.cpp
+﻿  zBuffer.cpp
+  vertex.cpp
+  utility.cpp
+  main.cpp
 c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\main.cpp(74): warning C4244: 'argument': conversion from 'float' to 'Uint32', possible loss of data
+  Window.cpp
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\window.cpp(62): warning C4018: '>=': signed/unsigned mismatch
+  Stack.cpp
+  Renderer.cpp
+  Polygon.cpp
+  ObjReader.cpp
+  Matrix.cpp
+  Line.cpp
+  Lighting.cpp
+  InputManager.cpp
+  DynamicArray.cpp
+  Clip.cpp
+  Camera.cpp
+  Generating Code...
+  LINK : C:\Users\Curtis\Documents\Visual Studio 2015\Projects\CGraphicsLibrary\Debug\CGraphicsLibrary.exe not found or not built by the last incremental link; performing full link
   CGraphicsLibrary.vcxproj -> C:\Users\Curtis\Documents\Visual Studio 2015\Projects\CGraphicsLibrary\Debug\CGraphicsLibrary.exe
   CGraphicsLibrary.vcxproj -> C:\Users\Curtis\Documents\Visual Studio 2015\Projects\CGraphicsLibrary\Debug\CGraphicsLibrary.pdb (Partial PDB)
