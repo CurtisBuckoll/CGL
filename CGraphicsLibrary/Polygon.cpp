@@ -74,6 +74,18 @@ inline vec4 getSlope_vertex(vec4 v1, vec4 v2, float dy)
 }
 
 
+inline Color_f getSlope_color(Color_f c1, Color_f c2, float dy)
+{
+	if (dy == 0)
+	{
+		return Color_f(0.0f, 0.0f, 0.0f);
+	}
+	Color_f dc = c2 - c1;
+
+	return dc * (-1.0f / dy);
+}
+
+
 /*  Performs perspective correct interpolation
  */
 inline Color interpolateColor(float currDist, float totalDist, Color P0, Color P1, float z_0, float z_1)
@@ -147,11 +159,11 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 	}
 
 	// If all vertices share the same colour, do not interpolate
-	bool shouldInterpolate = true;
-	if (points[0].color == points[1].color && points[0].color == points[2].color)
-	{
-		shouldInterpolate = false;
-	}
+	//bool shouldInterpolate = true;
+	//if (points[0].color == points[1].color && points[0].color == points[2].color)
+	//{
+	//	shouldInterpolate = false;
+	//}
 
 	int minY = points[0].pos_CS.y;
 	int maxY = points[0].pos_CS.y;
@@ -217,17 +229,17 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 	float slope_L = getSlopeInverted(left_array, index_L);
 	float slope_R = getSlopeInverted(right_array, index_R);
 
-	float totalDist_L = (float)sqrt(pow(left_array[index_L].pos_CS.x - left_array[index_L + 1].pos_CS.x, 2) +
-									pow(left_array[index_L].pos_CS.y - left_array[index_L + 1].pos_CS.y, 2));
-	float totalDist_R = (float)sqrt(pow(right_array[index_R].pos_CS.x - right_array[index_R + 1].pos_CS.x, 2) +
-									pow(right_array[index_R].pos_CS.y - right_array[index_R + 1].pos_CS.y, 2));
-	float currDist_L = 0.0f;
-	float currDist_R = 0.0f;
+	//float totalDist_L = (float)sqrt(pow(left_array[index_L].pos_CS.x - left_array[index_L + 1].pos_CS.x, 2) +
+	//								pow(left_array[index_L].pos_CS.y - left_array[index_L + 1].pos_CS.y, 2));
+	//float totalDist_R = (float)sqrt(pow(right_array[index_R].pos_CS.x - right_array[index_R + 1].pos_CS.x, 2) +
+	//								pow(right_array[index_R].pos_CS.y - right_array[index_R + 1].pos_CS.y, 2));
+	//float currDist_L = 0.0f;
+	//float currDist_R = 0.0f;
 
-	float zCoord_L = (float)left_array[index_L].pos_CS.z;
-	float zCoord_R = (float)right_array[index_R].pos_CS.z;
-	float zSlope_L = getSlope_dzdy(left_array, index_L);
-	float zSlope_R = getSlope_dzdy(right_array, index_R);
+	//float zCoord_L = (float)left_array[index_L].pos_CS.z;
+	//float zCoord_R = (float)right_array[index_R].pos_CS.z;
+	//float zSlope_L = getSlope_dzdy(left_array, index_L);
+	//float zSlope_R = getSlope_dzdy(right_array, index_R);
 
 	/** Set up Z Coord interpolation: this is persp correct (z') **/
 	float zCoord_L1 = 1.0f / left_array[index_L].pos.z;
@@ -236,6 +248,14 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 	float zCoord_R2 = 1.0f / right_array[index_R + 1].pos.z;
 	float zPrimeSlope_L = getSlope_dzPrimedy(zCoord_L1, zCoord_L2, (float)(left_array[index_L + 1].pos_CS.y - left_array[index_L].pos_CS.y));
 	float zPrimeSlope_R = getSlope_dzPrimedy(zCoord_R1, zCoord_R2, (float)(right_array[index_R + 1].pos_CS.y - right_array[index_R].pos_CS.y));
+
+	/** Set up Perspective Correct vertex colour interpolation **/
+	Color_f color_L1 = left_array[index_L].color.convertToFloat() * (1.0f / left_array[index_L].pos.z);
+	Color_f color_L2 = left_array[index_L + 1].color.convertToFloat() * (1.0f / left_array[index_L + 1].pos.z);
+	Color_f color_R1 = right_array[index_R].color.convertToFloat() * (1.0f / right_array[index_R].pos.z);
+	Color_f color_R2 = right_array[index_R + 1].color.convertToFloat() * (1.0f / right_array[index_R + 1].pos.z);
+	Color_f colorSlope_L = getSlope_color(color_L1, color_L2, (float)(left_array[index_L + 1].pos_CS.y - left_array[index_L].pos_CS.y));
+	Color_f colorSlope_R = getSlope_color(color_R1, color_R2, (float)(right_array[index_R + 1].pos_CS.y - right_array[index_R].pos_CS.y));
 
 	/** Set up Perspective Correct normal interpolation **/
 	vec4 norm_L1 = left_array[index_L].normal * (1.0f / left_array[index_L].pos.z);
@@ -259,15 +279,19 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 		{
 			index_L++;
 			slope_L = getSlopeInverted(left_array, index_L);
-			totalDist_L = (float)sqrt(pow(left_array[index_L].pos_CS.x - left_array[index_L + 1].pos_CS.x, 2) +
-				pow(left_array[index_L].pos_CS.y - left_array[index_L + 1].pos_CS.y, 2));
-			currDist_L = 0.0f;
+			//totalDist_L = (float)sqrt(pow(left_array[index_L].pos_CS.x - left_array[index_L + 1].pos_CS.x, 2) +
+			//						  pow(left_array[index_L].pos_CS.y - left_array[index_L + 1].pos_CS.y, 2));
+			//currDist_L = 0.0f;
 
-			zSlope_L = getSlope_dzdy(left_array, index_L);
+			//zSlope_L = getSlope_dzdy(left_array, index_L);
 
 			zCoord_L1 = zCoord_L2;
 			zCoord_L2 = 1.0f / left_array[index_L + 1].pos.z;
 			zPrimeSlope_L = getSlope_dzPrimedy(zCoord_L1, zCoord_L2, (float)(left_array[index_L + 1].pos_CS.y - left_array[index_L].pos_CS.y));
+
+			color_L1 = color_L2;
+			color_L2 = left_array[index_L + 1].color.convertToFloat() * (1.0f / left_array[index_L + 1].pos.z);
+			colorSlope_L = getSlope_color(color_L1, color_L2, (float)(left_array[index_L + 1].pos_CS.y - left_array[index_L].pos_CS.y));
 
 			norm_L1 = norm_L2;
 			norm_L2 = left_array[index_L + 1].normal * (1.0f / left_array[index_L + 1].pos.z);
@@ -282,15 +306,19 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 		{
 			index_R++;
 			slope_R = getSlopeInverted(right_array, index_R);
-			totalDist_R = (float)sqrt(pow(right_array[index_R].pos_CS.x - right_array[index_R + 1].pos_CS.x, 2) +
-				pow(right_array[index_R].pos_CS.y - right_array[index_R + 1].pos_CS.y, 2));
-			currDist_R = 0.0f;
+			//totalDist_R = (float)sqrt(pow(right_array[index_R].pos_CS.x - right_array[index_R + 1].pos_CS.x, 2) +
+			//						  pow(right_array[index_R].pos_CS.y - right_array[index_R + 1].pos_CS.y, 2));
+			//currDist_R = 0.0f;
 
-			zSlope_R = getSlope_dzdy(right_array, index_R);
+			//zSlope_R = getSlope_dzdy(right_array, index_R);
 
 			zCoord_R1 = zCoord_R2;
 			zCoord_R2 = 1.0f / right_array[index_R + 1].pos.z;
 			zPrimeSlope_R = getSlope_dzPrimedy(zCoord_R1, zCoord_R2, (float)(right_array[index_R + 1].pos_CS.y - right_array[index_R].pos_CS.y));
+
+			color_R1 = color_R2;
+			color_R2 = right_array[index_R + 1].color.convertToFloat() * (1.0f / right_array[index_R + 1].pos.z);
+			colorSlope_R = getSlope_color(color_R1, color_R2, (float)(right_array[index_R + 1].pos_CS.y - right_array[index_R].pos_CS.y));
 
 			norm_R1 = norm_R2;
 			norm_R2 = right_array[index_R + 1].normal * (1.0f / right_array[index_R + 1].pos.z);
@@ -302,20 +330,20 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 
 		}
 
-		Color color_L;
-		Color color_R;
-		if (shouldInterpolate)
-		{
-			color_L = interpolateColor(currDist_L, totalDist_L, left_array[index_L].color, left_array[index_L + 1].color,
-				(float)left_array[index_L].pos_CS.z, (float)left_array[index_L + 1].pos_CS.z);
-			color_R = interpolateColor(currDist_R, totalDist_R, right_array[index_R].color, right_array[index_R + 1].color,
-				(float)right_array[index_R].pos_CS.z, (float)right_array[index_R + 1].pos_CS.z);
-		}
-		else
-		{
-			color_L = points[0].color;
-			color_R = points[0].color;
-		}
+		//Color color_L;
+		//Color color_R;
+		//if (shouldInterpolate)
+		//{
+		//	color_L = interpolateColor(currDist_L, totalDist_L, left_array[index_L].color, left_array[index_L + 1].color,
+		//		(float)left_array[index_L].pos_CS.z, (float)left_array[index_L + 1].pos_CS.z);
+		//	color_R = interpolateColor(currDist_R, totalDist_R, right_array[index_R].color, right_array[index_R + 1].color,
+		//		(float)right_array[index_R].pos_CS.z, (float)right_array[index_R + 1].pos_CS.z);
+		//}
+		//else
+		//{
+		//	color_L = points[0].color;
+		//	color_R = points[0].color;
+		//}
 
 		int L_endpoint = (int)round((left_array[index_L].pos_CS.y - y) * slope_L + left_array[index_L].pos_CS.x);
 		int R_endpoint = (int)round((right_array[index_R].pos_CS.y - y) * slope_R + right_array[index_R].pos_CS.x);
@@ -326,50 +354,55 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 		int dx = (R_endpoint - L_endpoint);
 
 		// Interpolation across scan lines
-		float dzdx;
+		//float dzdx;
 		float dzPrimedx;
 		vec4 dNorm_dx;
 		vec4 dWSC_dx;
+		Color_f dcdx;
 
 		if (dx != 0)
 		{
-			dzdx = (zCoord_R - zCoord_L) / dx;
+			//dzdx = (zCoord_R - zCoord_L) / dx;
 			dzPrimedx = (zCoord_R1 - zCoord_L1) / dx;
 			dNorm_dx = (norm_R1 - norm_L1) *  (1.0f / dx);
 			dWSC_dx = (wsc_R1 - wsc_L1) *  (1.0f / dx);
+			dcdx = (color_R1 - color_L1) * (1.0f / dx);
 		}
 		else
 		{
-			dzdx = 0.0f;
+			//dzdx = 0.0f;
 			dzPrimedx = 0.0f;
 			dNorm_dx = vec4(0.0f, 0.0f, 0.0f, 0.0f);
 			dWSC_dx = vec4(0.0f, 0.0f, 0.0f, 0.0f);
+			dcdx = Color_f(0.0f, 0.0f, 0.0f);
 		}
 
-		float zCurrent = zCoord_L;
+		//float zCurrent = zCoord_L;
 		float zPrimeCurrent = zCoord_L1;
 		vec4 normCurrent = norm_L1;
 		vec4 wscCurrent = wsc_L1;
+		Color_f colorCurrent = color_L1;
 
 		for (int x = L_endpoint; x < R_endpoint; x++)
 		{
 			float PerspCurrZ = 1.0f / zPrimeCurrent;
-			vec4 PerspCurrNormal = normCurrent * (1.0f / zPrimeCurrent);
-			vec4 PerspCurrWSC = wscCurrent * (1.0f / zPrimeCurrent);
+			vec4 PerspCurrNormal = normCurrent * PerspCurrZ;
+			vec4 PerspCurrWSC = wscCurrent * PerspCurrZ;
+			Color_f PerspCurrColor = colorCurrent * PerspCurrZ;
 
 			if (x >= 0 && x < zbuffer->width && y >= 0 && y < zbuffer->height && PerspCurrZ < zbuffer->buffer[x][y])
 			{
-				Color color;
+				Color color = Color(PerspCurrColor);
 
-				if (shouldInterpolate)
-				{
-					color = interpolateColor((float)currHorizontalDist, totalHorizontalDist,
-											 color_L, color_R, zCoord_L, zCoord_R);
-				}
-				else
-				{
-					color = points[0].color;
-				}
+				//if (shouldInterpolate)
+				//{
+				//	color = interpolateColor((float)currHorizontalDist, totalHorizontalDist,
+				//							 color_L, color_R, zCoord_L, zCoord_R);
+				//}
+				//else
+				//{
+				//	color = points[0].color;
+				//}
 
 				// Get pixel value for lighting and depth shading
 				color = lightEngine->PerformLightingCalculation(color, PerspCurrNormal, PerspCurrWSC);
@@ -381,21 +414,25 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 
 			// Increment lerp values
 			currHorizontalDist++;
-			zCurrent += dzdx;
+			//zCurrent += dzdx;
 			zPrimeCurrent += dzPrimedx;
+			colorCurrent = colorCurrent + dcdx;
 			normCurrent = normCurrent + dNorm_dx;
 			wscCurrent = wscCurrent + dWSC_dx;
 		}
 
 		// Increment lerp values
-		currDist_L += sqrt(1 + pow(abs(slope_L), 2));
-		currDist_R += sqrt(1 + pow(abs(slope_R), 2));
+		//currDist_L += sqrt(1 + pow(abs(slope_L), 2));
+		//currDist_R += sqrt(1 + pow(abs(slope_R), 2));
 
 		zCoord_L1 += zPrimeSlope_L;
 		zCoord_R1 += zPrimeSlope_R;
 
-		zCoord_L += zSlope_L;
-		zCoord_R += zSlope_R;
+		//zCoord_L += zSlope_L;
+		//zCoord_R += zSlope_R;
+
+		color_L1 = color_L1 + colorSlope_L;
+		color_R1 = color_R1 + colorSlope_R;
 
 		norm_L1 = norm_L1 + normSlope_L;
 		norm_R1 = norm_R1 + normSlope_R;

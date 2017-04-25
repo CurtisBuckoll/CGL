@@ -32,7 +32,7 @@ Renderer::Renderer(Window* window, Lighting* _LightEngine, PolygonList* vertexDa
 	_SCREEN = mat4();
 	float uniformScaleSize = (float)std::max(_frustum.parameters.xHi - _frustum.parameters.xLo, _frustum.parameters.yHi - _frustum.parameters.yLo);
 	_SCREEN.translate((650.0f - (_frustum.parameters.xHi - _frustum.parameters.xLo) * 650.0f / uniformScaleSize) / 2.0f,
-		(650.0f - (_frustum.parameters.yHi - _frustum.parameters.yLo) * 650.0f / uniformScaleSize) / 2.0f - 1.0f, 0.0f);
+					  (650.0f - (_frustum.parameters.yHi - _frustum.parameters.yLo) * 650.0f / uniformScaleSize) / 2.0f - 1.0f, 0.0f);
 	_SCREEN.scale(650.0f / uniformScaleSize, (650.0f) / uniformScaleSize, 1.0f);
 	_SCREEN.translate(-_frustum.parameters.xLo, -_frustum.parameters.yLo, 0.0f);
 
@@ -56,7 +56,8 @@ void Renderer::TransformToScreen(std::vector<Vertex>* vertices, std::vector<std:
 	for (unsigned int i = 0; i < vertices->size(); i++)
 	{
 		Vertex newVertex = (*vertices)[i];
-		newVertex.pos = _CAMERA_INVERSE * newVertex.pos_WS;
+		newVertex.pos = _CAMERA * newVertex.pos_WS;
+		//newVertex.pos = _CAMERA_INVERSE * newVertex.pos_WS;
 		vertexList.push_back(newVertex);
 	}
 
@@ -113,11 +114,46 @@ void Renderer::ToggleLighting()
 	_lightEngine->doLighting = !_lightEngine->doLighting;
 }
 
+
 void Renderer::ToggleWireframe()
 {
 	_wireFrame = !_wireFrame;
 }
 
+
+void Renderer::setRenderModes(bool* keys)
+{
+	static bool shouldPress = true;
+	if (keys[SDLK_l] && shouldPress)
+	{
+		ToggleLighting();
+		shouldPress = false;
+	}
+	else if (!keys[SDLK_l])
+	{
+		shouldPress = true;
+	}
+
+	static bool shouldPressWire = true;
+	if (keys[SDLK_f] && shouldPressWire)
+	{
+		ToggleWireframe();
+		shouldPressWire = false;
+	}
+	else if (!keys[SDLK_f])
+	{
+		shouldPressWire = true;
+	}
+}
+
+
+Lighting* Renderer::getLightEngine()
+{
+	return _lightEngine;
+}
+
+
+/*
 void Renderer::UpdateCamera()
 {
 	const float moveAmount = 0.8f;
@@ -201,12 +237,19 @@ void Renderer::UpdateCamera()
 	eyePoint = _CAMERA * eyePoint;
 	_lightEngine->setEyePoint(eyePoint);
 }
+*/
+
+
+void Renderer::setCameraMatrix(mat4 camera)
+{
+	_CAMERA = camera;
+}
 
 
 void Renderer::renderData()
 {
 	_window->clearBackground();
-	_CAMERA_INVERSE = _CAMERA.inverse();
+	//_CAMERA_INVERSE = _CAMERA.inverse();
 	
 	for (unsigned int i = 0; i < _vertexData->vertices.size(); i++)
 	{
