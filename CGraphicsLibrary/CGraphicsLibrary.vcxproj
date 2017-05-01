@@ -122,6 +122,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Clip.cpp" />
     <ClCompile Include="DynamicArray.cpp" />
+    <ClCompile Include="FrameRateLimiter.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="Line.cpp" />
@@ -143,6 +144,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Clip.h" />
     <ClInclude Include="DynamicArray.h" />
+    <ClInclude Include="FrameRateLimiter.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="lighting.h" />
     <ClInclude Include="Line.h" />
@@ -151,6 +153,7 @@
     <ClInclude Include="Point.h" />
     <ClInclude Include="Polygon.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="SimpIO.h" />
     <ClInclude Include="SimpWriter.h" />
     <ClInclude Include="Stack.h" />
@@ -192,6 +195,9 @@
     <None Include="triangle.simp" />
     <None Include="triPrism.simp" />
     <None Include="z0_face.simp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="CGraphicsLibrary.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

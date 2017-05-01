@@ -8,8 +8,8 @@ Camera::Camera()
 	_CAMERA = mat4();
 	_forward = vec4(0.0f, 0.0f, 1.0f, 0.0f);
 	_right = vec4(1.0f, 0.0f, 0.0f, 0.0f);
-	_moveAmount = 0.8f;
-	_rotateAmount = 10.0f;
+	_moveAmount = 0.1f;
+	_rotateAmount = 1.0f;
 }
 
 

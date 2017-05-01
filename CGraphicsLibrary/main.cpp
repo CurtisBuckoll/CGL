@@ -9,44 +9,46 @@
 #include "Renderer.h"
 #include "InputManager.h"
 #include "Camera.h"
+#include "FrameRateLimiter.h"
 
+std::string filepath = "./lightScene.simp";
+const int FPS = 25;
+const int PRINT_FPS_FREQ = 25;
+const float MOVESPEED = 0.15f;
 
 int main(int argc, char** argv)
 {
+	// Create window - size fixed at 650 x 650
 	Window window;
 	window.init();
 
-	std::string filepath;
 	if (argc == 2)
 	{
 		filepath = std::string(argv[1]);
 	}
 
+	// Vertex data
 	PolygonList* polygonData = new PolygonList();
 	Lighting* lightEngine = new Lighting();
 
 	// Read data from simp
-	SimpIO file("./pageF.simp", lightEngine, polygonData);
+	SimpIO file(filepath, lightEngine, polygonData);
 	RenderArgs renderParams = file.Read();
 
-	//Initialize renderer
+	// Initialize renderer
 	InputManager userInput;
 	Camera camera;
 	Renderer renderer(&window, lightEngine, polygonData, renderParams);
-	renderer.renderData();
 
+	// Initialize FPS limiter and main loop
+	FrameRateLimiter fpsLimiter(FPS, MOVESPEED, PRINT_FPS_FREQ);
 	bool running = true;
-	const int FPS = 25;
-	const float MSPF = 1000.0f / FPS;
 	float deltaTime = 1.0f;
 
-	float currFrameTime = 0.0f;
-
-	// Main loop
-	Uint32 start;
+	// Loop
 	while (running) 
 	{
-		start = SDL_GetTicks();
+		fpsLimiter.setStartFrame();
 
 		running = userInput.pollForEvents();
 		camera.updateCamera(userInput.getKeys(), renderer.getLightEngine(), deltaTime);
@@ -55,18 +57,12 @@ int main(int argc, char** argv)
 		renderer.setCameraMatrix(camera.getCameraMatrix());
 		renderer.renderData();
 
-		currFrameTime = SDL_GetTicks() - start;
-		if (MSPF > currFrameTime) {
-			SDL_Delay(MSPF - currFrameTime);
-			currFrameTime = MSPF;
-		}
+		fpsLimiter.LimitFPS(&deltaTime);
+		fpsLimiter.printFPS();
 
-		deltaTime = currFrameTime / MSPF;
 		//std::cout << deltaTime << std::endl;
-		//std::cout << 1000.0f / (SDL_GetTicks() - start) << std::endl;
 	}
 
-	//Exit
 	SDL_Quit();
 	return 0;
 }
