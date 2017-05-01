@@ -26,7 +26,7 @@ int main(int argc, char** argv)
 	Lighting* lightEngine = new Lighting();
 
 	// Read data from simp
-	SimpIO file("./lightScene.simp", lightEngine, polygonData);
+	SimpIO file("./pageF.simp", lightEngine, polygonData);
 	RenderArgs renderParams = file.Read();
 
 	//Initialize renderer
@@ -36,7 +36,11 @@ int main(int argc, char** argv)
 	renderer.renderData();
 
 	bool running = true;
-	const int FPS = 30;
+	const int FPS = 25;
+	const float MSPF = 1000.0f / FPS;
+	float deltaTime = 1.0f;
+
+	float currFrameTime = 0.0f;
 
 	// Main loop
 	Uint32 start;
@@ -44,37 +48,22 @@ int main(int argc, char** argv)
 	{
 		start = SDL_GetTicks();
 
-		//SDL_Event event;
-		//while (SDL_PollEvent(&event)) 
-		//{
-		//	switch (event.type) 
-		//	{
-		//	case SDL_QUIT:
-		//		running = false;
-		//		break;
-
-		//	case SDL_KEYDOWN:
-		//		renderer.userInput.keys[event.key.keysym.sym] = true;
-		//		break;
-
-		//	case SDL_KEYUP:
-		//		renderer.userInput.keys[event.key.keysym.sym] = false;
-		//		break;
-		//	}
-		//}
 		running = userInput.pollForEvents();
-		camera.updateCamera(userInput.getKeys(), renderer.getLightEngine());
+		camera.updateCamera(userInput.getKeys(), renderer.getLightEngine(), deltaTime);
 		
 		renderer.setRenderModes(userInput.getKeys());
 		renderer.setCameraMatrix(camera.getCameraMatrix());
-		//renderer.UpdateCamera();
 		renderer.renderData();
 
-		if (1000.0f / FPS > SDL_GetTicks() - start) {
-			SDL_Delay(1000.0f / FPS - (SDL_GetTicks() - start));
+		currFrameTime = SDL_GetTicks() - start;
+		if (MSPF > currFrameTime) {
+			SDL_Delay(MSPF - currFrameTime);
+			currFrameTime = MSPF;
 		}
 
-		std::cout << 1000.0f / (SDL_GetTicks() - start) << std::endl;
+		deltaTime = currFrameTime / MSPF;
+		//std::cout << deltaTime << std::endl;
+		//std::cout << 1000.0f / (SDL_GetTicks() - start) << std::endl;
 	}
 
 	//Exit
