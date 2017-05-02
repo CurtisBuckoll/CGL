@@ -1,4 +1,4 @@
-flat
+gouraud
 
 ambient 0.1 0.1 0.1
 depth 1 40 0.0 0.0 0.0

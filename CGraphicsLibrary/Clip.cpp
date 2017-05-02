@@ -121,7 +121,6 @@ void Clip::clipPlane(std::vector<Vertex>* vertices, const vec4& plane)
     vec4 plane_D0 = plane;
     plane_D0.w = 0;
 
-
     // Corner case: we are clipping a line. We handle seperately. We know we are starting in +ve halfspace.
     if (vertices->size() == 2)
     {
@@ -152,13 +151,11 @@ void Clip::clipPlane(std::vector<Vertex>* vertices, const vec4& plane)
         return;
     }
 
-
     // Default case: we are clipping a polygon.
     for (unsigned int i = 0; i < vertices->size(); i++)
     {
         Vertex prev = (*vertices)[(startIndex + i) % vertices->size()];
         Vertex curr = (*vertices)[(startIndex + i + 1) % vertices->size()];
-
         Vertex clippedVec = curr;
 
         // Do not clip curr
@@ -207,4 +204,21 @@ void Clip::clipPlane(std::vector<Vertex>* vertices, const vec4& plane)
     {
         vertices->push_back(clippedVertices[i]);
     }
+}
+
+
+/** Compute signed area of polygon
+ *	Sign of result determines vertex winding: +ve: CCW
+ *	A = 1/2 * (x1*y2 - x2*y1 + x2*y3 - x3*y2 + ... + xn*y1 - x1*yn)
+ */
+bool Clip::backFaceCull(const std::vector<Vertex>& vertices)
+{
+	float result = 0.0f;
+	for (unsigned int i = 0; i < vertices.size(); i++)
+	{
+		vec4 v1 = vertices[i].pos;
+		vec4 v2 = vertices[(i + 1) % vertices.size()].pos;
+		result += (v1.x * v2.y) - (v2.x * v1.y);
+	}
+	return result < 0;
 }

@@ -32,8 +32,11 @@ public:
 
 	void ToggleLighting();
 	void ToggleWireframe();
-	void UpdateCamera();
+	void setRenderModes(bool* keys);
+	//void UpdateCamera();
+	void setCameraMatrix(mat4 camera);
 	void renderData();
+	Lighting* getLightEngine();
 
 	InputManager userInput;
 

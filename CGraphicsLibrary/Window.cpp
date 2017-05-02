@@ -3,11 +3,13 @@
 #include <iostream>
 
 
-Window::Window()
+Window::Window(int width, int height)
 {
 	_window = nullptr;
 	_renderer = nullptr;
 	_texture = nullptr;
+	_width = width;
+	_height = height;
 }
 
 
@@ -20,9 +22,6 @@ Window::~Window()
 
 void Window::init()
 {
-	_width = 650;
-	_height = 650;
-
 	SDL_Init(SDL_INIT_EVERYTHING);
 
 	_window = SDL_CreateWindow("Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _width, _height, SDL_WINDOW_SHOWN);
@@ -59,12 +58,12 @@ void Window::setPixel(int x, int y, Color color)
 {
 	int Y = -(y - _height + 1);
 	int offset = (_width * 4 * Y) + x * 4;
-	if (offset >= _pixels.size())
-	{
-		std::cout << "Out of range: " << offset << " " << _pixels.size() << std::endl;
-		return;
-	}
-	_pixels[offset + 0] = color.r;      
+	//if (offset >= _pixels.size())
+	//{
+	//	std::cout << "Out of range: " << offset << " " << _pixels.size() << std::endl;
+	//	return;
+	//}
+	_pixels[offset]		= color.r;      
 	_pixels[offset + 1] = color.g;       
 	_pixels[offset + 2] = color.b;       
 	_pixels[offset + 3] = SDL_ALPHA_OPAQUE;

@@ -5,6 +5,8 @@
 
 /*  Dynamic Array -------------------------------------------------------------------- */
 
+const int BASE_LEN = 6;
+
 template <class T>
 class DynamicArray
 {

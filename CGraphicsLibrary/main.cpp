@@ -8,70 +8,63 @@
 #include "SimpIO.h"
 #include "Renderer.h"
 #include "InputManager.h"
+#include "Camera.h"
+#include "FrameRateLimiter.h"
 
+// Global parameters
+std::string FILEPATH = "./lightScene.simp";
+const int WIN_WIDTH = 650;
+const int WIN_HEIGHT = 650;
+const int FPS = 25;
+const int PRINT_FPS_FREQ = 25;
+const float MOVESPEED = 0.10f;
 
+// Entry
 int main(int argc, char** argv)
 {
-	Window window;
+	// Create window
+	Window window(WIN_WIDTH, WIN_HEIGHT);
 	window.init();
 
-	std::string filepath;
 	if (argc == 2)
 	{
-		filepath = std::string(argv[1]);
+		FILEPATH = std::string(argv[1]);
 	}
 
-	Lighting* lightEngine = new Lighting();
+	// Vertex data
 	PolygonList* polygonData = new PolygonList();
+	Lighting* lightEngine = new Lighting();
 
-	SimpIO file("./pageF.simp", lightEngine, polygonData);
+	// Read data from simp
+	SimpIO file(FILEPATH, lightEngine, polygonData);
 	RenderArgs renderParams = file.Read();
 
+	// Initialize renderer
+	InputManager userInput;
+	Camera camera;
 	Renderer renderer(&window, lightEngine, polygonData, renderParams);
-	renderer.renderData();
 
+	// Initialize FPS limiter and main loop
+	FrameRateLimiter fpsLimiter(FPS, MOVESPEED, PRINT_FPS_FREQ);
 	bool running = true;
-	const int FPS = 30;
+	float deltaTime = 1.0f;
 
-
-	// Keep window open
-	Uint32 start;
-	bool update = false;
+	// Loop
 	while (running) 
 	{
-		start = SDL_GetTicks();
+		fpsLimiter.setStartFrame();
 
-		SDL_Event event;
-		while (SDL_PollEvent(&event)) 
-		{
-			switch (event.type) 
-			{
-			case SDL_QUIT:
-				running = false;
-				break;
-
-			case SDL_KEYDOWN:
-				renderer.userInput.keys[event.key.keysym.sym] = true;
-				break;
-
-			case SDL_KEYUP:
-				renderer.userInput.keys[event.key.keysym.sym] = false;
-				break;
-			}
-		}
-		renderer.UpdateCamera();
-
-
+		running = userInput.pollForEvents();
+		camera.updateCamera(userInput.getKeys(), renderer.getLightEngine(), deltaTime);
+		
+		renderer.setRenderModes(userInput.getKeys());
+		renderer.setCameraMatrix(camera.getCameraMatrix());
 		renderer.renderData();
 
-		if (1000 / FPS > SDL_GetTicks() - start) {
-			SDL_Delay(1000 / FPS - (SDL_GetTicks() - start));
-		}
-
-		std::cout << 1000.0f / (SDL_GetTicks() - start) << std::endl;
+		fpsLimiter.LimitFPS(&deltaTime);
+		fpsLimiter.printFPS();
 	}
 
-	//Exit
 	SDL_Quit();
 	return 0;
 }

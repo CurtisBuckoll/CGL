@@ -9,8 +9,8 @@ template <class T>
 DynamicArray<T>::DynamicArray()
 {
 	_lengthAllocated = 0;
-	_lengthTotal = 3;
-	_array = new T[3];
+	_lengthTotal = BASE_LEN;
+	_array = new T[BASE_LEN];
 }
 
 template <class T>
@@ -75,10 +75,10 @@ T DynamicArray<T>::pop_back()
 template <class T>
 void DynamicArray<T>::clear()
 {
-	delete[] _array;
-	_array = new T[3];
+	//delete[] _array;
+	//_array = new T[6];
 	_lengthAllocated = 0;
-	_lengthTotal = 3;
+	_lengthTotal = BASE_LEN;
 }
 
 template <class T>

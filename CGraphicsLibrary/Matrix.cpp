@@ -374,18 +374,6 @@ float vec4::dot(const vec4& rhs) const
 vec4 vec4::cross(const vec4& V2) const
 {
     return vec4(y * V2.z - z * V2.y, z * V2.x - x * V2.z, x * V2.y - y * V2.x, 0.0f);
-
-    /*
-    vec4 b = *this;
-    vec4 c = V2;
-    vec4 result(0.0f, 0.0f, 0.0f, 0.0f);
-
-    result.x = b.y * c.z - b.z * c.y;
-    result.y = b.z * c.x - b.x * c.z;
-    result.z = b.x * c.y - b.y * c.x;
-
-    return result;
-    */
 }
 
 // Returns the EUCLIDEAN magnitude of a vector - ignores the w component

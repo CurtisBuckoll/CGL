@@ -13,6 +13,12 @@ struct Color_f {
 
     // Component-wise multiplication
     Color_f operator*(Color_f rhs) const;
+
+	// Scalar multiplication
+	Color_f operator*(float scalar) const;
+
+	Color_f operator+(Color_f rhs) const;
+	Color_f operator-(Color_f rhs) const;
 };
 
 struct Color {
@@ -22,10 +28,15 @@ struct Color {
 
     Color();
     Color(unsigned char R, unsigned char G, unsigned char B);
+	Color(Color_f color);
+
     unsigned int packColor();
     Color_f convertToFloat();
 
-    bool operator==(const Color& lhs) const;
+    bool operator==(const Color& rhs) const;
+
+	// Scalar multiplication
+	Color operator*(float scalar) const;
 };
 
 struct Vertex
@@ -33,7 +44,7 @@ struct Vertex
     vec4 pos;
     vec4 pos_WS;
 
-    // Integer vec 3 containing rounded vertex coordinates
+    // Integer vec 3 - contains rounded vertex coordinates
     vec3 pos_CS;
 
     vec4 normal;

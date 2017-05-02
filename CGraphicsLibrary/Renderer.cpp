@@ -8,7 +8,6 @@
 #include <algorithm>
 
 
-
 Renderer::Renderer(Window* window, Lighting* _LightEngine, PolygonList* vertexData, RenderArgs parameters) :
 	_wireFrame(parameters.wireFrame),
 	_depthNear(parameters.depthNear),
@@ -32,10 +31,9 @@ Renderer::Renderer(Window* window, Lighting* _LightEngine, PolygonList* vertexDa
 	_SCREEN = mat4();
 	float uniformScaleSize = (float)std::max(_frustum.parameters.xHi - _frustum.parameters.xLo, _frustum.parameters.yHi - _frustum.parameters.yLo);
 	_SCREEN.translate((650.0f - (_frustum.parameters.xHi - _frustum.parameters.xLo) * 650.0f / uniformScaleSize) / 2.0f,
-		(650.0f - (_frustum.parameters.yHi - _frustum.parameters.yLo) * 650.0f / uniformScaleSize) / 2.0f - 1.0f, 0.0f);
+					  (650.0f - (_frustum.parameters.yHi - _frustum.parameters.yLo) * 650.0f / uniformScaleSize) / 2.0f - 1.0f, 0.0f);
 	_SCREEN.scale(650.0f / uniformScaleSize, (650.0f) / uniformScaleSize, 1.0f);
 	_SCREEN.translate(-_frustum.parameters.xLo, -_frustum.parameters.yLo, 0.0f);
-
 
 	_forward = vec4(0.0f, 0.0f, 1.0f, 0.0f);
 	_right = vec4(1.0f, 0.0f, 0.0f, 0.0f);
@@ -56,7 +54,7 @@ void Renderer::TransformToScreen(std::vector<Vertex>* vertices, std::vector<std:
 	for (unsigned int i = 0; i < vertices->size(); i++)
 	{
 		Vertex newVertex = (*vertices)[i];
-		newVertex.pos = _CAMERA_INVERSE * newVertex.pos_WS;
+		newVertex.pos = _CAMERA * newVertex.pos_WS;
 		vertexList.push_back(newVertex);
 	}
 
@@ -90,10 +88,9 @@ void Renderer::TransformToScreen(std::vector<Vertex>* vertices, std::vector<std:
 		splitVertexList.push_back(line);
 	}
 
-	// Finish transforming and render the data
+	// Project data to viewing plane
 	for (unsigned int j = 0; j < splitVertexList.size(); j++)
 	{
-		//DynamicArray<Vertex> points;
 		for (unsigned int k = 0; k < splitVertexList[j].size(); k++)
 		{
 			splitVertexList[j][k].pos = _PROJ * splitVertexList[j][k].pos;
@@ -103,7 +100,12 @@ void Renderer::TransformToScreen(std::vector<Vertex>* vertices, std::vector<std:
 			splitVertexList[j][k].pos.w = 1.0f;
 			splitVertexList[j][k].pos = _SCREEN * splitVertexList[j][k].pos;
 		}
-		transformed->push_back(splitVertexList[j]);
+
+		// Perform backface culling
+		if (!_frustum.backFaceCull(splitVertexList[j]))
+		{
+			transformed->push_back(splitVertexList[j]);
+		}
 	}
 }
 
@@ -113,100 +115,54 @@ void Renderer::ToggleLighting()
 	_lightEngine->doLighting = !_lightEngine->doLighting;
 }
 
+
 void Renderer::ToggleWireframe()
 {
 	_wireFrame = !_wireFrame;
 }
 
-void Renderer::UpdateCamera()
+
+void Renderer::setRenderModes(bool* keys)
 {
-	const float moveAmount = 0.8f;
-	const float rotateAmount = 10.0f;
-
-	if (userInput.keys[SDLK_COMMA])
-	{
-		mat4 updateMatrix = mat4();
-		updateMatrix.rotate(rotateAmount, Axis::Y);
-		_CAMERA = _CAMERA * updateMatrix;
-		mat4 uMatrix_inv = updateMatrix.inverse();
-		_forward = _forward * uMatrix_inv;
-		_right = _right * uMatrix_inv;
-		_forward.normalize();
-		_right.normalize();
-	}
-	
-	if (userInput.keys[SDLK_PERIOD])
-	{
-		mat4 updateMatrix = mat4();
-		updateMatrix.rotate(-rotateAmount, Axis::Y);
-		_CAMERA = _CAMERA * updateMatrix;
-		mat4 uMatrix_inv = updateMatrix.inverse();
-		_forward = _forward * uMatrix_inv;
-		_right = _right * uMatrix_inv;
-		_forward.normalize();
-		_right.normalize();
-	}
-	if (userInput.keys[SDLK_a])
-	{
-		mat4 updateMatrix = mat4();
-		vec4 dir = _right * -moveAmount;
-		updateMatrix.translate(dir.x, dir.y, dir.z);
-		_CAMERA = updateMatrix * _CAMERA;
-	}
-	if (userInput.keys[SDLK_d])
-	{
-		mat4 updateMatrix = mat4();
-		vec4 dir = _right * moveAmount;
-		updateMatrix.translate(dir.x, dir.y, dir.z);
-		_CAMERA = updateMatrix * _CAMERA;
-	}
-	if (userInput.keys[SDLK_w])
-	{
-		mat4 updateMatrix = mat4();
-		vec4 dir = _forward * moveAmount;
-		updateMatrix.translate(dir.x, dir.y, dir.z);
-		_CAMERA = updateMatrix * _CAMERA;
-	}
-	if (userInput.keys[SDLK_s])
-	{
-		mat4 updateMatrix = mat4();
-		vec4 dir = _forward * -moveAmount;
-		updateMatrix.translate(dir.x, dir.y, dir.z);
-		_CAMERA = updateMatrix * _CAMERA;
-	}
-
 	static bool shouldPress = true;
-	if (userInput.keys[SDLK_l] && shouldPress)
+	if (keys[SDLK_l] && shouldPress)
 	{
 		ToggleLighting();
 		shouldPress = false;
 	}
-	else if (!userInput.keys[SDLK_l])
+	else if (!keys[SDLK_l])
 	{
 		shouldPress = true;
 	}
 
 	static bool shouldPressWire = true;
-	if (userInput.keys[SDLK_f] && shouldPressWire)
+	if (keys[SDLK_f] && shouldPressWire)
 	{
 		ToggleWireframe();
 		shouldPressWire = false;
 	}
-	else if (!userInput.keys[SDLK_f])
+	else if (!keys[SDLK_f])
 	{
 		shouldPressWire = true;
 	}
+}
 
-	vec4 eyePoint = vec4(0.0f, 0.0f, 0.0f, 1.0f);
-	eyePoint = _CAMERA * eyePoint;
-	_lightEngine->setEyePoint(eyePoint);
+
+Lighting* Renderer::getLightEngine()
+{
+	return _lightEngine;
+}
+
+
+void Renderer::setCameraMatrix(mat4 camera)
+{
+	_CAMERA = camera;
 }
 
 
 void Renderer::renderData()
 {
 	_window->clearBackground();
-	_CAMERA_INVERSE = _CAMERA.inverse();
 	
 	for (unsigned int i = 0; i < _vertexData->vertices.size(); i++)
 	{
@@ -227,6 +183,7 @@ void Renderer::renderData()
 			}
 		}
 	}
+
 	_zBuffer->reset();
 	_window->RenderFrame();
 }

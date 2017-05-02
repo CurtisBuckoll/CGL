@@ -12,7 +12,7 @@ ambient (0.6, 0.6, 0.6)
 #x: 0 y: 359 z: 300 colour: 4278190080
 #x: 325 y: 325 z: 300 colour: 4281157630
 
-flat
+phong
 
 surface (1.0, 1.0, 1.0) 0.3 100
 # the light source
