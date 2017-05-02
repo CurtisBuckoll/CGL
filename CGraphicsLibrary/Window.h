@@ -13,12 +13,11 @@ private:
 	SDL_Texture* _texture;
 	std::vector<unsigned char> _pixels;
 
-
 	int _width;
 	int _height;
 
 public:
-	Window();
+	Window(int width, int height);
 	~Window();
 
 	int getWidth();

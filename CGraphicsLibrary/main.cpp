@@ -11,20 +11,24 @@
 #include "Camera.h"
 #include "FrameRateLimiter.h"
 
-std::string filepath = "./lightScene.simp";
+// Global parameters
+std::string FILEPATH = "./lightScene.simp";
+const int WIN_WIDTH = 650;
+const int WIN_HEIGHT = 650;
 const int FPS = 25;
 const int PRINT_FPS_FREQ = 25;
-const float MOVESPEED = 0.15f;
+const float MOVESPEED = 0.10f;
 
+// Entry
 int main(int argc, char** argv)
 {
-	// Create window - size fixed at 650 x 650
-	Window window;
+	// Create window
+	Window window(WIN_WIDTH, WIN_HEIGHT);
 	window.init();
 
 	if (argc == 2)
 	{
-		filepath = std::string(argv[1]);
+		FILEPATH = std::string(argv[1]);
 	}
 
 	// Vertex data
@@ -32,7 +36,7 @@ int main(int argc, char** argv)
 	Lighting* lightEngine = new Lighting();
 
 	// Read data from simp
-	SimpIO file(filepath, lightEngine, polygonData);
+	SimpIO file(FILEPATH, lightEngine, polygonData);
 	RenderArgs renderParams = file.Read();
 
 	// Initialize renderer
@@ -59,8 +63,6 @@ int main(int argc, char** argv)
 
 		fpsLimiter.LimitFPS(&deltaTime);
 		fpsLimiter.printFPS();
-
-		//std::cout << deltaTime << std::endl;
 	}
 
 	SDL_Quit();

@@ -158,12 +158,6 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 		points[i].EnableCSCoords();
 	}
 
-	// Perform backface culling
-	if (!isCCW(points)) // || points.size() != 3)
-	{
-		return;
-	}
-
 	// Find max/min y values
 	int minY = points[0].pos_CS.y;
 	int maxY = points[0].pos_CS.y;
@@ -341,7 +335,6 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 			dcdx = Color_f(0.0f, 0.0f, 0.0f);
 		}
 
-		//float zCurrent = zCoord_L;
 		float zPrimeCurrent = zCoord_L1;
 		vec4 normCurrent = norm_L1;
 		vec4 wscCurrent = wsc_L1;
@@ -357,6 +350,8 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 			if (x >= 0 && x < zbuffer->width && y >= 0 && y < zbuffer->height && PerspCorr_Z < zbuffer->buffer[x][y])
 			{
 				Color color = Color(PerspCorr_Color);
+
+				//color = points[0].color;
 
 				// Get pixel value for lighting and depth shading
 				color = lightEngine->PerformLightingCalculation(color, PerspCorr_Normal, PerspCorr_WSC);

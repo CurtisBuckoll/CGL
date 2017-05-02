@@ -13,20 +13,18 @@ enum class LIGHTMODEL {
 
 
 struct LightSource {
-    /** These are set when we initialise a light source
-     */
+    /** These are set when we initialise a light source **/
     vec4 position;
     float A;
-    float B;        // A, B are attenuation constants from "light" command
-    Color_f I;        // Intesity of light i
+    float B;			// A, B are attenuation constants from "light" command
+    Color_f I;			// Intesity of light i
 
     // For FLAT/GOURAUD shading
     float diffuse;
     float specular;
     float f_att;
 
-    /** Methods
-     */
+    /** Methods	**/
     LightSource(const vec4& pos, float A, float B, const Color_f& intensity);
     LightSource();
     ~LightSource();
@@ -38,7 +36,6 @@ private:
     LIGHTMODEL _model;
     std::vector<LightSource> _lightSources;
 
-    //float objColor;   // Diffuse reflection coefficient
     float _k_s;         // Specular reflection coefficient
     int _p;             // Specular reflection exponent
     vec4 _eyepoint;
@@ -59,7 +56,7 @@ public:
     void addLightSource(const vec4& pos, float A, float B, const Color_f& intensity);
 
     void init(std::vector<Vertex>* vertices);
-    Color Lighting::PerformLightingCalculation(Color objectColor, vec4& N, vec4& vertexPos);
+    Color PerformLightingCalculation(Color objectColor, vec4& N, vec4& vertexPos);
     
 };
 

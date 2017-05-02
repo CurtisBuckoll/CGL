@@ -50,4 +50,5 @@ public:
 	void Init(FrustumParams params);
     bool cullToFrustum(const std::vector<Vertex>& vertices);
     void clipToFrustum(std::vector<Vertex>* vertices);
+	bool backFaceCull(const std::vector<Vertex>& vertices);
 };

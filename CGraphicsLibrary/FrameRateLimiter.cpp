@@ -10,6 +10,7 @@ FrameRateLimiter::FrameRateLimiter(unsigned int FPS, float velocity, unsigned in
 	_MSPF = 1000.0f / FPS;
 	_velocity = velocity;
 	_printFrequency = printFPSfreq;
+	_frame = 0;
 }
 
 
@@ -27,22 +28,35 @@ void FrameRateLimiter::setStartFrame()
 
 void FrameRateLimiter::LimitFPS(float* deltaTime)
 {
-	float currFrameTime = SDL_GetTicks() - _startTime;
-	if (_MSPF > currFrameTime) {
-		SDL_Delay(_MSPF - currFrameTime);
+	float currFrameTime = static_cast<float>(SDL_GetTicks() - _startTime);
+
+	if (_MSPF > currFrameTime) 
+	{
+		SDL_Delay(static_cast<Uint32>(_MSPF - currFrameTime));
 		currFrameTime = _MSPF;
 	}
+
+	_frameTimes[_frame] = currFrameTime;
+	_frame = (_frame + 1) % NUM_FRAMES;
+
 	*deltaTime = currFrameTime * _velocity;
 }
 
 
 void FrameRateLimiter::printFPS()
 {
-	static int frame = 0;
-	frame++;
-	if (frame % _printFrequency == 0)
+	static int frameNumber;
+	frameNumber++;
+
+	if (frameNumber % _printFrequency == 0)
 	{
-		std::cout << 1000.0f / (SDL_GetTicks() - _startTime) << std::endl;
-		frame = 0;
+		float avg = 0.0f;
+		for (unsigned int i = 0; i < NUM_FRAMES; i++)
+		{
+			avg += _frameTimes[i];
+		}
+		avg = (1000.0f * NUM_FRAMES) / avg;
+
+		std::cout << "FPS " << avg << std::endl;
 	}
 }
