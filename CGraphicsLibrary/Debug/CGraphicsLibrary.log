@@ -1,16 +1,14 @@
 ﻿  zBuffer.cpp
+  utility.cpp
+  main.cpp
   Window.cpp
   Vertex.cpp
-  utility.cpp
   Stack.cpp
-  Source.cpp
   SimpIO.cpp
   Renderer.cpp
   Polygon.cpp
-  Point.cpp
   ObjReader.cpp
   Matrix.cpp
-  main.cpp
   Line.cpp
   Lighting.cpp
   InputManager.cpp
@@ -19,5 +17,6 @@
   Clip.cpp
   Camera.cpp
   Generating Code...
+  LINK : C:\Users\Curtis\Documents\Visual Studio 2015\Projects\CGraphicsLibrary\Debug\CGraphicsLibrary.exe not found or not built by the last incremental link; performing full link
   CGraphicsLibrary.vcxproj -> C:\Users\Curtis\Documents\Visual Studio 2015\Projects\CGraphicsLibrary\Debug\CGraphicsLibrary.exe
   CGraphicsLibrary.vcxproj -> C:\Users\Curtis\Documents\Visual Studio 2015\Projects\CGraphicsLibrary\Debug\CGraphicsLibrary.pdb (Partial PDB)
