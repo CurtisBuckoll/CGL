@@ -1,0 +1,31 @@
+﻿  zBuffer.cpp
+  Window.cpp
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\window.h(3): fatal error C1083: Cannot open include file: 'SDL\SDL.h': No such file or directory
+  Vertex.cpp
+  utility.cpp
+  Stack.cpp
+  Source.cpp
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\source.cpp(1): fatal error C1083: Cannot open include file: 'SDL/SDL.h': No such file or directory
+  SimpIO.cpp
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\window.h(3): fatal error C1083: Cannot open include file: 'SDL\SDL.h': No such file or directory
+  Renderer.cpp
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\window.h(3): fatal error C1083: Cannot open include file: 'SDL\SDL.h': No such file or directory
+  Polygon.cpp
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\window.h(3): fatal error C1083: Cannot open include file: 'SDL\SDL.h': No such file or directory
+  Point.cpp
+  ObjReader.cpp
+  Matrix.cpp
+  main.cpp
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\main.cpp(1): fatal error C1083: Cannot open include file: 'SDL/SDL.h': No such file or directory
+  Line.cpp
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\window.h(3): fatal error C1083: Cannot open include file: 'SDL\SDL.h': No such file or directory
+  Lighting.cpp
+  InputManager.cpp
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\inputmanager.cpp(3): fatal error C1083: Cannot open include file: 'SDL\SDL.h': No such file or directory
+  FrameRateLimiter.cpp
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\frameratelimiter.cpp(4): fatal error C1083: Cannot open include file: 'SDL\SDL.h': No such file or directory
+  DynamicArray.cpp
+  Clip.cpp
+  Camera.cpp
+c:\users\curtis\documents\visual studio 2015\projects\cgraphicslibrary\cgraphicslibrary\camera.cpp(3): fatal error C1083: Cannot open include file: 'SDL\SDL.h': No such file or directory
+  Generating Code...
