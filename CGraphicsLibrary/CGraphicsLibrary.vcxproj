@@ -135,6 +135,7 @@
     <ClCompile Include="SimpIO.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Stack.cpp" />
+    <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="utility.cpp" />
     <ClCompile Include="Vertex.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="Line.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="ObjReader.h" />
+    <ClInclude Include="picoPNG.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Polygon.h" />
     <ClInclude Include="Renderer.h" />
@@ -157,6 +159,7 @@
     <ClInclude Include="SimpIO.h" />
     <ClInclude Include="SimpWriter.h" />
     <ClInclude Include="Stack.h" />
+    <ClInclude Include="Texture2D.h" />
     <ClInclude Include="utility.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="Window.h" />
