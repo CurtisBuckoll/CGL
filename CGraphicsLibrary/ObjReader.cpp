@@ -74,8 +74,8 @@ ObjReader::ObjReader(const std::string& filepath, std::vector<Vertex>* vertices,
     _faces = faces;
 
     // Append 'empty' vertices to index 0 of _vertices and _normals
-    _vertices->push_back(Vertex(vec4(0.0f, 0.0f, 0.0f, 0.0f), vec4(0.0f, 0.0f, 0.0f, 0.0f), vec4(0.0f, 0.0f, 0.0f, 0.0f), Color()));
-    _normals->push_back(vec4(0.0f, 0.0f, 0.0f, 0.0f));
+    _vertices->push_back(Vertex(vec4(0.0, 0.0, 0.0, 0.0), vec4(0.0, 0.0, 0.0, 0.0), vec4(0.0, 0.0, 0.0, 0.0), Color()));
+    _normals->push_back(vec4(0.0, 0.0, 0.0, 0.0));
 }
 
 
@@ -175,50 +175,50 @@ void ObjReader::InterpretLineObj(const std::vector<std::string>& tokens)
     {
         if (tokens.size() == 4)
         {
-            vec4 vertex = vec4(stof(tokens[1]), stof(tokens[2]), -1.0f * stof(tokens[3]));
+            vec4 vertex = vec4(stod(tokens[1]), stod(tokens[2]), -1.0 * stod(tokens[3]));
             //vertex.color = _surfaceColor;
 
-            _vertices->push_back(Vertex(vertex, vertex, vec4(0.0f, 0.0f, 0.0f, 0.0f), _surfaceColor));
+            _vertices->push_back(Vertex(vertex, vertex, vec4(0.0, 0.0, 0.0, 0.0), _surfaceColor));
         }
         else if (tokens.size() == 5)
         {
-            vec4 vertex = vec4(stof(tokens[1]), stof(tokens[2]), -1.0f * stof(tokens[3]), stof(tokens[4]));
+            vec4 vertex = vec4(stod(tokens[1]), stod(tokens[2]), -1.0 * stod(tokens[3]), stod(tokens[4]));
             //vertex.color = _surfaceColor;
             //_vertices->push_back(vertex);
-            _vertices->push_back(Vertex(vertex, vertex, vec4(0.0f, 0.0f, 0.0f, 0.0f), _surfaceColor));
+            _vertices->push_back(Vertex(vertex, vertex, vec4(0.0, 0.0, 0.0, 0.0), _surfaceColor));
         }
         else if (tokens.size() == 7)
         {
-            vec4 vertex = vec4(stof(tokens[1]), stof(tokens[2]), -1.0f * stof(tokens[3]));
-            //vertex.color = packColor((unsigned char)(stof(tokens[4]) * 255),
-            //                         (unsigned char)(stof(tokens[5]) * 255),
-            //                         (unsigned char)(stof(tokens[6]) * 255));
+            vec4 vertex = vec4(stod(tokens[1]), stod(tokens[2]), -1.0 * stod(tokens[3]));
+            //vertex.color = packColor((unsigned char)(stod(tokens[4]) * 255),
+            //                         (unsigned char)(stod(tokens[5]) * 255),
+            //                         (unsigned char)(stod(tokens[6]) * 255));
             //_vertices->push_back(vertex);
-            Color vColor = Color((unsigned char)(stof(tokens[4]) * 255),
-                                 (unsigned char)(stof(tokens[5]) * 255),
-                                 (unsigned char)(stof(tokens[6]) * 255));
-            _vertices->push_back(Vertex(vertex, vertex, vec4(0.0f, 0.0f, 0.0f, 0.0f), vColor));
+            Color vColor = Color((unsigned char)(stod(tokens[4]) * 255),
+                                 (unsigned char)(stod(tokens[5]) * 255),
+                                 (unsigned char)(stod(tokens[6]) * 255));
+            _vertices->push_back(Vertex(vertex, vertex, vec4(0.0, 0.0, 0.0, 0.0), vColor));
 
         }
         else if (tokens.size() == 8)
         {
-            vec4 vertex = vec4(stof(tokens[1]), stof(tokens[2]), -1.0f * stof(tokens[3]), stof(tokens[4]));
-            //vertex.color = packColor((unsigned char)(stof(tokens[5]) * 255),
-            //                         (unsigned char)(stof(tokens[6]) * 255),
-            //                         (unsigned char)(stof(tokens[7]) * 255));
+            vec4 vertex = vec4(stod(tokens[1]), stod(tokens[2]), -1.0 * stod(tokens[3]), stod(tokens[4]));
+            //vertex.color = packColor((unsigned char)(stod(tokens[5]) * 255),
+            //                         (unsigned char)(stod(tokens[6]) * 255),
+            //                         (unsigned char)(stod(tokens[7]) * 255));
             //_vertices->push_back(vertex);
-            Color vColor = Color((unsigned char)(stof(tokens[5]) * 255),
-                                 (unsigned char)(stof(tokens[6]) * 255),
-                                 (unsigned char)(stof(tokens[7]) * 255));
-            _vertices->push_back(Vertex(vertex, vertex, vec4(0.0f, 0.0f, 0.0f, 0.0f), vColor));
+            Color vColor = Color((unsigned char)(stod(tokens[5]) * 255),
+                                 (unsigned char)(stod(tokens[6]) * 255),
+                                 (unsigned char)(stod(tokens[7]) * 255));
+            _vertices->push_back(Vertex(vertex, vertex, vec4(0.0, 0.0, 0.0, 0.0), vColor));
         }
     }
     else if (tokens[0] == "vn")
     {
         if (tokens.size() == 4)
         {
-            _normals->push_back(vec4(stof(tokens[1]), stof(tokens[2]), -1.0f * stof(tokens[3]), 0.0f));
-            //_normals->push_back(vec4(0.0f, 0.0f, 0.0f, 0.0f));
+            _normals->push_back(vec4(stod(tokens[1]), stod(tokens[2]), -1.0 * stod(tokens[3]), 0.0));
+            //_normals->push_back(vec4(0.0, 0.0, 0.0, 0.0));
         }
         else
         {

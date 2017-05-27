@@ -22,7 +22,7 @@ public:
 	 *		Vertices should have a specified colour.
 	 */
     static void drawPolygonLERP(std::vector<Vertex>& points,
-								float opacity, 
+								double opacity, 
 								bool wireframe, 
 								zBuffer* zbuffer,
                                 Window* window,

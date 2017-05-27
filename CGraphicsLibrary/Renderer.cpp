@@ -29,14 +29,14 @@ Renderer::Renderer(Window* window, Lighting* _LightEngine, PolygonList* vertexDa
 
 	// Set up screen matrix
 	_SCREEN = mat4();
-	float uniformScaleSize = (float)std::max(_frustum.parameters.xHi - _frustum.parameters.xLo, _frustum.parameters.yHi - _frustum.parameters.yLo);
-	_SCREEN.translate((650.0f - (_frustum.parameters.xHi - _frustum.parameters.xLo) * 650.0f / uniformScaleSize) / 2.0f,
-					  (650.0f - (_frustum.parameters.yHi - _frustum.parameters.yLo) * 650.0f / uniformScaleSize) / 2.0f - 1.0f, 0.0f);
-	_SCREEN.scale(650.0f / uniformScaleSize, (650.0f) / uniformScaleSize, 1.0f);
-	_SCREEN.translate(-_frustum.parameters.xLo, -_frustum.parameters.yLo, 0.0f);
+	double uniformScaleSize = (double)std::max(_frustum.parameters.xHi - _frustum.parameters.xLo, _frustum.parameters.yHi - _frustum.parameters.yLo);
+	_SCREEN.translate((650.0 - (_frustum.parameters.xHi - _frustum.parameters.xLo) * 650.0 / uniformScaleSize) / 2.0f,
+					  (650.0 - (_frustum.parameters.yHi - _frustum.parameters.yLo) * 650.0 / uniformScaleSize) / 2.0f - 1.0, 0.0);
+	_SCREEN.scale(650.0 / uniformScaleSize, (650.0) / uniformScaleSize, 1.0);
+	_SCREEN.translate(-_frustum.parameters.xLo, -_frustum.parameters.yLo, 0.0);
 
-	_forward = vec4(0.0f, 0.0f, 1.0f, 0.0f);
-	_right = vec4(1.0f, 0.0f, 0.0f, 0.0f);
+	_forward = vec4(0.0, 0.0, 1.0, 0.0);
+	_right = vec4(1.0, 0.0, 0.0, 0.0);
 }
 
 
@@ -97,7 +97,7 @@ void Renderer::TransformToScreen(std::vector<Vertex>* vertices, std::vector<std:
 			splitVertexList[j][k].pos.x = splitVertexList[j][k].pos.x / splitVertexList[j][k].pos.z;
 			splitVertexList[j][k].pos.y = splitVertexList[j][k].pos.y / splitVertexList[j][k].pos.z;
 
-			splitVertexList[j][k].pos.w = 1.0f;
+			splitVertexList[j][k].pos.w = 1.0;
 			splitVertexList[j][k].pos = _SCREEN * splitVertexList[j][k].pos;
 		}
 
@@ -179,7 +179,7 @@ void Renderer::renderData()
 			else if (transformedVertices[j].size() >= 3)
 			{
 				_lightEngine->init(&transformedVertices[j]);
-				Polygon::drawPolygonLERP(transformedVertices[j], 1.0f, _wireFrame, _zBuffer, _window, _lightEngine);
+				Polygon::drawPolygonLERP(transformedVertices[j], 1.0, _wireFrame, _zBuffer, _window, _lightEngine);
 			}
 		}
 	}

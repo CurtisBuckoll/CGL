@@ -5,13 +5,13 @@
 
 Color_f::Color_f()
 {
-    r = 0.0f;
-    g = 0.0f;
-    b = 0.0f;
+    r = 0.0;
+    g = 0.0;
+    b = 0.0;
 }
 
 
-Color_f::Color_f(float R, float G, float B)
+Color_f::Color_f(double R, double G, double B)
 {
     r = R;
     g = G;
@@ -25,7 +25,7 @@ Color_f Color_f::operator*(Color_f rhs) const
 }
 
 
-Color_f Color_f::operator*(float scalar) const
+Color_f Color_f::operator*(double scalar) const
 {
 	return Color_f(r * scalar, g * scalar, b * scalar);
 }
@@ -73,9 +73,9 @@ unsigned int Color::packColor()
 }
 
 
-Color_f Color::convertToFloat()
+Color_f Color::convertTodouble()
 {
-    return Color_f((float)r / 255, (float)g / 255, (float)b / 255);
+    return Color_f((double)r / 255, (double)g / 255, (double)b / 255);
 }
 
 
@@ -89,7 +89,7 @@ bool Color::operator==(const Color& rhs) const
 }
 
 
-Color Color::operator*(float scalar) const
+Color Color::operator*(double scalar) const
 {
 	return Color((unsigned char)(r * scalar), (unsigned char)(g * scalar), (unsigned char)(b * scalar));
 }
@@ -97,10 +97,10 @@ Color Color::operator*(float scalar) const
 
 Vertex::Vertex()
 {
-    pos = vec4(0.0f, 0.0f, 0.0f, 0.0f);
-    pos_CS = vec4(0.0f, 0.0f, 0.0f, 0.0f);
-    pos_WS = vec4(0.0f, 0.0f, 0.0f, 0.0f);
-    normal = vec4(0.0f, 0.0f, 0.0f, 0.0f);
+    pos = vec4(0.0, 0.0, 0.0, 0.0);
+    pos_CS = vec4(0.0, 0.0, 0.0, 0.0);
+    pos_WS = vec4(0.0, 0.0, 0.0, 0.0);
+    normal = vec4(0.0, 0.0, 0.0, 0.0);
     color = Color(0, 0, 0);
 }
 

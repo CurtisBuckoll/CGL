@@ -5,7 +5,7 @@ Clip::Clip()
 {
     for(int i = 0; i < 6; i++)
     {
-        _frustum[i] = vec4(0.0f, 0.0f, 0.0f, 0.0f);
+        _frustum[i] = vec4(0.0, 0.0, 0.0, 0.0);
     }
 }
 
@@ -18,14 +18,14 @@ void Clip::Init(FrustumParams params)
 {
 	parameters = params;
 
-    vec4 top_L = vec4(params.xLo, params.yHi, 1.0f, 0.0f);
-    vec4 bot_L = vec4(params.xLo, params.yLo, 1.0f, 0.0f);
-    vec4 bot_R = vec4(params.xHi, params.yLo, 1.0f, 0.0f);
-    vec4 top_R = vec4(params.xHi, params.yHi, 1.0f, 0.0f);
+    vec4 top_L = vec4(params.xLo, params.yHi, 1.0, 0.0);
+    vec4 bot_L = vec4(params.xLo, params.yLo, 1.0, 0.0);
+    vec4 bot_R = vec4(params.xHi, params.yLo, 1.0, 0.0);
+    vec4 top_R = vec4(params.xHi, params.yHi, 1.0, 0.0);
 
     // Build the clipping planes
-    _frustum[0] = vec4(0.0f, 0.0f, 1.0, -params.hither);	// Front
-    _frustum[1] = vec4(0.0f, 0.0f, -1.0, params.yon);		// Back
+    _frustum[0] = vec4(0.0, 0.0, 1.0, -params.hither);	// Front
+    _frustum[1] = vec4(0.0, 0.0, -1.0, params.yon);		// Back
     _frustum[2] = top_L.cross(bot_L);						// Left
     _frustum[3] = bot_L.cross(bot_R);						// Bottom
     _frustum[4] = bot_R.cross(top_R);						// Right
@@ -75,7 +75,7 @@ inline bool Clip::cullPlane(const std::vector<Vertex>& vertices, const vec4& pla
 }
 
 
-inline Color computeClippedColour(const Vertex& p0, const Vertex& p1, float t)
+inline Color computeClippedColour(const Vertex& p0, const Vertex& p1, double t)
 {
     unsigned char clippedColor_R = (unsigned char)(t * p0.color.r + (1-t) * p1.color.r);
     unsigned char clippedColor_G = (unsigned char)(t * p0.color.g + (1-t) * p1.color.g);
@@ -85,13 +85,13 @@ inline Color computeClippedColour(const Vertex& p0, const Vertex& p1, float t)
 }
 
 
-inline vec4 computeClippedNormal(const Vertex& p0, const Vertex& p1, float t)
+inline vec4 computeClippedNormal(const Vertex& p0, const Vertex& p1, double t)
 {
     return (p0.normal * t) + (p1.normal * (1-t));
 }
 
 
-inline vec4 computeClippedWSC(const Vertex& p0, const Vertex& p1, float t)
+inline vec4 computeClippedWSC(const Vertex& p0, const Vertex& p1, double t)
 {
     return (p0.pos_WS * t) + (p1.pos_WS * (1-t));
 }
@@ -132,7 +132,7 @@ void Clip::clipPlane(std::vector<Vertex>* vertices, const vec4& plane)
         Vertex clippedVec = curr;
         if (plane.dot(curr.pos) < 0)
         {
-            float t = -(curr.pos.dot(plane) / (prev.pos.dot(plane_D0) - curr.pos.dot(plane_D0)));
+            double t = -(curr.pos.dot(plane) / (prev.pos.dot(plane_D0) - curr.pos.dot(plane_D0)));
             clippedVec.pos = vec4(t * prev.pos.x + (1 - t) * (curr.pos.x),
                                   t * prev.pos.y + (1 - t) * (curr.pos.y),
                                   t * prev.pos.z + (1 - t) * (curr.pos.z));
@@ -168,7 +168,7 @@ void Clip::clipPlane(std::vector<Vertex>* vertices, const vec4& plane)
         else if (plane.dot(curr.pos) < 0 && inPositiveHS)
         {
             // Perform intersection calculation: "curr" is the vertex of interest
-            float t = -(curr.pos.dot(plane) / (prev.pos.dot(plane_D0) - curr.pos.dot(plane_D0)));
+            double t = -(curr.pos.dot(plane) / (prev.pos.dot(plane_D0) - curr.pos.dot(plane_D0)));
             clippedVec.pos = vec4(t * prev.pos.x + (1 - t) * (curr.pos.x),
                                   t * prev.pos.y + (1 - t) * (curr.pos.y),
                                   t * prev.pos.z + (1 - t) * (curr.pos.z));
@@ -183,7 +183,7 @@ void Clip::clipPlane(std::vector<Vertex>* vertices, const vec4& plane)
         // We have crossed over from -ve to +ve halfspace
         else if ((plane.dot(curr.pos) > 0 && !inPositiveHS))
         {
-            float t = -(curr.pos.dot(plane) / (prev.pos.dot(plane_D0) - curr.pos.dot(plane_D0)));
+            double t = -(curr.pos.dot(plane) / (prev.pos.dot(plane_D0) - curr.pos.dot(plane_D0)));
             clippedVec.pos = vec4(t * prev.pos.x + (1 - t) * (curr.pos.x),
                                   t * prev.pos.y + (1 - t) * (curr.pos.y),
                                   t * prev.pos.z + (1 - t) * (curr.pos.z));
@@ -213,7 +213,7 @@ void Clip::clipPlane(std::vector<Vertex>* vertices, const vec4& plane)
  */
 bool Clip::backFaceCull(const std::vector<Vertex>& vertices)
 {
-	float result = 0.0f;
+	double result = 0.0;
 	for (unsigned int i = 0; i < vertices.size(); i++)
 	{
 		vec4 v1 = vertices[i].pos;

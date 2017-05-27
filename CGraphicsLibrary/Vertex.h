@@ -4,18 +4,18 @@
 
 /* for storing colour values between 0 and 1 */
 struct Color_f {
-    float r;
-    float g;
-    float b;
+    double r;
+    double g;
+    double b;
 
     Color_f();
-    Color_f(float R, float G, float B);
+    Color_f(double R, double G, double B);
 
     // Component-wise multiplication
     Color_f operator*(Color_f rhs) const;
 
 	// Scalar multiplication
-	Color_f operator*(float scalar) const;
+	Color_f operator*(double scalar) const;
 
 	Color_f operator+(Color_f rhs) const;
 	Color_f operator-(Color_f rhs) const;
@@ -31,12 +31,12 @@ struct Color {
 	Color(Color_f color);
 
     unsigned int packColor();
-    Color_f convertToFloat();
+    Color_f convertTodouble();
 
     bool operator==(const Color& rhs) const;
 
 	// Scalar multiplication
-	Color operator*(float scalar) const;
+	Color operator*(double scalar) const;
 };
 
 struct Vertex

@@ -119,7 +119,7 @@ Octant getOctant(vec3* p0, vec3* p1, Vertex* V0, Vertex* V1, vec3* v)
 
 
 // Blends desired colour with existing pixel's colour based on opacity
-unsigned int getPixelWithOpacity(unsigned int color, unsigned int pixelColor, float opacity)
+unsigned int getPixelWithOpacity(unsigned int color, unsigned int pixelColor, double opacity)
 {
     unsigned int r_pixel = (pixelColor >> 16) & 0xff;
     unsigned int g_pixel = (pixelColor >> 8) & 0xff;
@@ -180,46 +180,46 @@ void Line::DDA(Vertex V0, Vertex V1, zBuffer* zbuffer, Window* window)
 
     int dx = v.x;
     int dy = v.y;
-    float slope = (float)dy / dx;
-    float dzdx = (float)(p1.z - p0.z) / dx;
-    float zCurrent = (float)p0.z;
+    double slope = (double)dy / dx;
+    double dzdx = (double)(p1.z - p0.z) / dx;
+    double zCurrent = (double)p0.z;
 
-    float r_P0 = (float)V0.color.r;
-    float g_P0 = (float)V0.color.g;
-    float b_P0 = (float)V0.color.b;
-    float r_P1 = (float)V1.color.r;
-    float g_P1 = (float)V1.color.g;
-    float b_P1 = (float)V1.color.b;
+    double r_P0 = (double)V0.color.r;
+    double g_P0 = (double)V0.color.g;
+    double b_P0 = (double)V0.color.b;
+    double r_P1 = (double)V1.color.r;
+    double g_P1 = (double)V1.color.g;
+    double b_P1 = (double)V1.color.b;
 
 
     // Perspective correct
-    float z0_prime = 1.0f;
-    float z1_prime = 1.0f;
+    double z0_prime = 1.0;
+    double z1_prime = 1.0;
     if (p0.z >= 1)
     {
         r_P0 = r_P0 / p0.z;
         g_P0 = g_P0 / p0.z;
         b_P0 = b_P0 / p0.z;
-        z0_prime =  1.0f / p0.z;
+        z0_prime =  1.0 / p0.z;
     }
     if (p1.z >= 1)
     {
         r_P1 = r_P1 / p1.z;
         g_P1 = g_P1 / p1.z;
         b_P1 = b_P1 / p1.z;
-        z1_prime = 1.0f / p1.z;
+        z1_prime = 1.0 / p1.z;
     }
-    float dzPrime_dx = (z1_prime - z0_prime) / dx;
+    double dzPrime_dx = (z1_prime - z0_prime) / dx;
 
-    float drdx = (r_P1 - r_P0) / dx;
-    float dgdx = (g_P1 - g_P0) / dx;
-    float dbdx = (b_P1 - b_P0) / dx;
+    double drdx = (r_P1 - r_P0) / dx;
+    double dgdx = (g_P1 - g_P0) / dx;
+    double dbdx = (b_P1 - b_P0) / dx;
 
-    float r = (float)r_P0;
-    float g = (float)g_P0;
-    float b = (float)b_P0;
+    double r = (double)r_P0;
+    double g = (double)g_P0;
+    double b = (double)b_P0;
 
-    float Y = 0.0f;
+    double Y = 0.0;
     for (int x = 0; x <= v.x; x++)
     {
         int y = (int)round(Y);

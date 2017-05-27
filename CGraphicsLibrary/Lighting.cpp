@@ -10,25 +10,25 @@
 
 LightSource::LightSource()
 {
-    position = vec4(0.0f, 0.0f, 0.0f, 0.0f);
-    A = 0.0f;
-    B = 0.0f;
+    position = vec4(0.0, 0.0, 0.0, 0.0);
+    A = 0.0;
+    B = 0.0;
     I = Color_f();
 }
 
 
-LightSource::LightSource(const vec4& pos, float A, float B, const Color_f& intensity)
+LightSource::LightSource(const vec4& pos, double A, double B, const Color_f& intensity)
 {
     position = pos;
     position.hgDivision();
-    position.w = 0.0f;
+    position.w = 0.0;
     this->A = A;
     this->B = B;
     I = intensity;
 
-    diffuse = 1.0f;
-    specular = 1.0f;
-    f_att = 1.0f;
+    diffuse = 1.0;
+    specular = 1.0;
+    f_att = 1.0;
 }
 
 
@@ -40,7 +40,7 @@ LightSource::~LightSource()
 
 Color Lighting::ComputeVertexShadingColor(Color objectColor)
 {
-    Color_f object_fl = objectColor.convertToFloat();
+    Color_f object_fl = objectColor.convertTodouble();
     Color_f result = object_fl;
     result = result * _ambient;
 
@@ -50,26 +50,26 @@ Color Lighting::ComputeVertexShadingColor(Color objectColor)
         if (_lightSources[i].diffuse <= 0) { continue; }
 
         // R
-        float I_r = _lightSources[i].I.r;
-        float k_r = object_fl.r;
-        float R = I_r * _lightSources[i].f_att * (k_r * _lightSources[i].diffuse + _lightSources[i].specular);
+        double I_r = _lightSources[i].I.r;
+        double k_r = object_fl.r;
+        double R = I_r * _lightSources[i].f_att * (k_r * _lightSources[i].diffuse + _lightSources[i].specular);
         // G
-        float I_g = _lightSources[i].I.g;
-        float k_g = object_fl.g;
-        float G = I_g * _lightSources[i].f_att * (k_g * _lightSources[i].diffuse + _lightSources[i].specular);
+        double I_g = _lightSources[i].I.g;
+        double k_g = object_fl.g;
+        double G = I_g * _lightSources[i].f_att * (k_g * _lightSources[i].diffuse + _lightSources[i].specular);
         // B
-        float I_b = _lightSources[i].I.b;
-        float k_b = object_fl.b;
-        float B = I_b * _lightSources[i].f_att * (k_b * _lightSources[i].diffuse + _lightSources[i].specular);
+        double I_b = _lightSources[i].I.b;
+        double k_b = object_fl.b;
+        double B = I_b * _lightSources[i].f_att * (k_b * _lightSources[i].diffuse + _lightSources[i].specular);
 
         result.r += R;
         result.g += G;
         result.b += B;
     }
 
-    if (result.r > 1.0f) {result.r = 1.0f;}
-    if (result.g > 1.0f) {result.g = 1.0f;}
-    if (result.b > 1.0f) {result.b = 1.0f;}
+    if (result.r > 1.0) {result.r = 1.0;}
+    if (result.g > 1.0) {result.g = 1.0;}
+    if (result.b > 1.0) {result.b = 1.0;}
 
     return Color((unsigned char)(255 * result.r),
                  (unsigned char)(255 * result.g),
@@ -85,7 +85,7 @@ Lighting::Lighting()
     _model = LIGHTMODEL::FLAT;
     _k_s = 0.3f;
     _p = 8;
-    _ambient = Color_f(0.0f, 0.0f, 0.0f);
+    _ambient = Color_f(0.0, 0.0, 0.0);
 	doLighting = true;
 }
 
@@ -96,7 +96,7 @@ Lighting::~Lighting()
 }
 
 
-void Lighting::setSurfaceProperties(float K_s, int P)
+void Lighting::setSurfaceProperties(double K_s, int P)
 {
     _k_s = K_s;
     _p = P;
@@ -119,11 +119,11 @@ void Lighting::setEyePoint(const vec4& eyePoint)
 {
     _eyepoint = eyePoint;
     _eyepoint.hgDivision();
-    _eyepoint.w = 0.0f;
+    _eyepoint.w = 0.0;
 }
 
 
-void Lighting::addLightSource(const vec4& pos, float A, float B, const Color_f& intensity)
+void Lighting::addLightSource(const vec4& pos, double A, double B, const Color_f& intensity)
 {
     _lightSources.push_back(LightSource(pos, A, B, intensity));
 }
@@ -149,16 +149,16 @@ void Lighting::init(std::vector<Vertex>* vertices)
     case LIGHTMODEL::FLAT :
 
         // Compute center of polygon and average normal N to the face
-        centerPos = vec4(0.0f, 0.0f, 0.0f, 0.0f);
-        N = vec4(0.0f, 0.0f, 0.0f, 0.0f);
+        centerPos = vec4(0.0, 0.0, 0.0, 0.0);
+        N = vec4(0.0, 0.0, 0.0, 0.0);
         for (unsigned int i = 0; i < vertices->size(); i++)
         {
             centerPos = centerPos + (*vertices)[i].pos_WS;
             N = N + (*vertices)[i].normal;
         }
-        centerPos = centerPos * (1.0f / 3);
+        centerPos = centerPos * (1.0 / 3);
         centerPos.w = 0;
-        N = N * (1.0f / 3);
+        N = N * (1.0 / 3);
         N.normalize();
 
         V = _eyepoint - centerPos;
@@ -167,8 +167,8 @@ void Lighting::init(std::vector<Vertex>* vertices)
         for (unsigned int i  = 0; i < _lightSources.size(); i++)
         {
             vec4 L = _lightSources[i].position - centerPos;
-            float dist = L.length();
-            _lightSources[i].f_att =  1.0f / (_lightSources[i].A + _lightSources[i].B * dist);
+            double dist = L.length();
+            _lightSources[i].f_att =  1.0 / (_lightSources[i].A + _lightSources[i].B * dist);
             L.normalize();
             vec4 R;
             R = (N * 2.0f * (N.dot(L))) - L;
@@ -177,8 +177,8 @@ void Lighting::init(std::vector<Vertex>* vertices)
             _lightSources[i].diffuse = N.dot(L);
 
 			// Clamp V.R if < 0
-			float VdotR = V.dot(R);
-			if (VdotR < 0.0f) { VdotR = 0.0f; }
+			double VdotR = V.dot(R);
+			if (VdotR < 0.0) { VdotR = 0.0; }
 
             _lightSources[i].specular = _k_s * pow(V.dot(R), _p);
         }
@@ -206,8 +206,8 @@ void Lighting::init(std::vector<Vertex>* vertices)
             for (unsigned int i  = 0; i < _lightSources.size(); i++)
             {
                 vec4 L = _lightSources[i].position - vertexPos;
-                float dist = L.length();
-                _lightSources[i].f_att =  1.0f / (_lightSources[i].A + _lightSources[i].B * dist);
+                double dist = L.length();
+                _lightSources[i].f_att =  1.0 / (_lightSources[i].A + _lightSources[i].B * dist);
                 L.normalize();
                 vec4 R;
                 R = (N * 2.0f * (N.dot(L))) - L;
@@ -216,8 +216,8 @@ void Lighting::init(std::vector<Vertex>* vertices)
                 _lightSources[i].diffuse = N.dot(L);
 
 				// Clamp V.R if < 0
-				float VdotR = V.dot(R);
-				if (VdotR < 0.0f) { VdotR = 0.0f; }
+				double VdotR = V.dot(R);
+				if (VdotR < 0.0) { VdotR = 0.0; }
 
                 _lightSources[i].specular = _k_s * pow(V.dot(R), _p);
             }
@@ -240,7 +240,7 @@ Color Lighting::PerformLightingCalculation(Color objectColor, vec4& N, vec4& ver
 {
 	if (!doLighting) { return objectColor; }
 
-    Color_f object_fl = objectColor.convertToFloat();
+    Color_f object_fl = objectColor.convertTodouble();
     Color_f result = object_fl;
     result = result * _ambient;
 
@@ -268,8 +268,8 @@ Color Lighting::PerformLightingCalculation(Color objectColor, vec4& N, vec4& ver
         for (unsigned int i  = 0; i < _lightSources.size(); i++)
         {
             vec4 L = _lightSources[i].position - vertexPos;
-            float dist = L.length();
-            _lightSources[i].f_att =  1.0f / (_lightSources[i].A + _lightSources[i].B * dist);
+            double dist = L.length();
+            _lightSources[i].f_att =  1.0 / (_lightSources[i].A + _lightSources[i].B * dist);
             L.normalize();
             vec4 R;
             R = (N * 2.0f * (N.dot(L))) - L;
@@ -278,8 +278,8 @@ Color Lighting::PerformLightingCalculation(Color objectColor, vec4& N, vec4& ver
             _lightSources[i].diffuse = N.dot(L);
 
 			// Clamp V.R if < 0
-			float VdotR = V.dot(R);
-			if (VdotR < 0.0f) { VdotR = 0.0f; }
+			double VdotR = V.dot(R);
+			if (VdotR < 0.0) { VdotR = 0.0; }
 
             _lightSources[i].specular = _k_s * pow(V.dot(R), _p);
         }

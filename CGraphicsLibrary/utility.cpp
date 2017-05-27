@@ -7,7 +7,7 @@ vec4 cross(const vec4& V1, const vec4& V2, const vec4& V3)
 {
     vec4 b = V2 - V1;
     vec4 c = V3 - V1;
-    vec4 result(0.0f, 0.0f, 0.0f, 0.0f);
+    vec4 result(0.0, 0.0, 0.0, 0.0);
 
     result.x = b.y * c.z - b.z * c.y;
     result.y = b.z * c.x - b.x * c.z;
@@ -76,7 +76,7 @@ Color multiplyColors(Color c1, Color c2)
                  (unsigned char)(c1.b * c2.b / 255.0f));
 }
 
-// Multiply color values COMPONENT wise - with one floating point
+// Multiply color values COMPONENT wise - with one doubleing point
 Color multiplyColors(Color c1, Color_f c2)
 {
     return Color((unsigned char)(c1.r * c2.r),
@@ -84,16 +84,16 @@ Color multiplyColors(Color c1, Color_f c2)
                  (unsigned char)(c1.b * c2.b));
 }
 
-Color computeDepthShading(float Z, Color objColor, zBuffer* zBuff)
+Color computeDepthShading(double Z, Color objColor, zBuffer* zBuff)
 {
     if (Z <= zBuff->depthNear) { return objColor; }
     if (Z >= zBuff->depthFar) { return zBuff->depthColor; }
 
-    float ratio = (Z - zBuff->depthNear) / (zBuff->depthFar - zBuff->depthNear);
+    double ratio = (Z - zBuff->depthNear) / (zBuff->depthFar - zBuff->depthNear);
 
-    unsigned char r = (unsigned char)(((1.0f - ratio) * objColor.r) + ((ratio) * zBuff->depthColor.r));
-    unsigned char g = (unsigned char)(((1.0f - ratio) * objColor.g) + ((ratio) * zBuff->depthColor.g));
-    unsigned char b = (unsigned char)(((1.0f - ratio) * objColor.b) + ((ratio) * zBuff->depthColor.b));
+    unsigned char r = (unsigned char)(((1.0 - ratio) * objColor.r) + ((ratio) * zBuff->depthColor.r));
+    unsigned char g = (unsigned char)(((1.0 - ratio) * objColor.g) + ((ratio) * zBuff->depthColor.g));
+    unsigned char b = (unsigned char)(((1.0 - ratio) * objColor.b) + ((ratio) * zBuff->depthColor.b));
 
     return Color(r, g, b);
 }

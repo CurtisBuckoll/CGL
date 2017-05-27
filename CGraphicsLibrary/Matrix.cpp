@@ -27,10 +27,10 @@ mat4::mat4()
 	{
 		for (int x = 0; x < 4; x++)
 		{
-			matrix[x][y] = 0.0f;
+			matrix[x][y] = 0.0;
 		}
 	}
-	matrix[0][0] = matrix[1][1] = matrix[2][2] = matrix[3][3] = 1.0f;
+	matrix[0][0] = matrix[1][1] = matrix[2][2] = matrix[3][3] = 1.0;
 }
 
 
@@ -42,15 +42,15 @@ mat4::mat4(MAT_TYPE type)
         {
             for (int x = 0; x < 4; x++)
             {
-                matrix[x][y] = 0.0f;
+                matrix[x][y] = 0.0;
             }
         }
-        matrix[0][0] = matrix[1][1] = matrix[2][2] = matrix[2][3] = 1.0f;
+        matrix[0][0] = matrix[1][1] = matrix[2][2] = matrix[2][3] = 1.0;
     }
 }
 
 
-void mat4::scale(float x, float y, float z)
+void mat4::scale(double x, double y, double z)
 {
 	mat4 scale;
 	scale.matrix[0][0] = x;
@@ -60,7 +60,7 @@ void mat4::scale(float x, float y, float z)
 }
 
 
-void mat4::translate(float x, float y, float z)
+void mat4::translate(double x, double y, double z)
 {
 	mat4 transform;
 	transform.matrix[3][0] = x;
@@ -70,7 +70,7 @@ void mat4::translate(float x, float y, float z)
 }
 
 
-void mat4::rotate(float angle, Axis axis)
+void mat4::rotate(double angle, Axis axis)
 {
 	mat4 rotate;
 
@@ -108,7 +108,7 @@ void mat4::random(int min, int max)
     {
         for (int y = 0; y < 4; y++)
         {
-            matrix[x][y] = (float)getRandomEntry(min, max);
+            matrix[x][y] = (double)getRandomEntry(min, max);
         }
     }
 }
@@ -116,7 +116,7 @@ void mat4::random(int min, int max)
 
 void swapRows(mat4* curr, int r1, int r2)
 {
-    float temp;
+    double temp;
     for (int x = 0; x < 4; x++)
     {
         temp = curr->matrix[x][r1];
@@ -134,7 +134,7 @@ mat4 mat4::inverse()
     mat4 curr = *this;
     mat4 res = mat4();
 
-    float c;
+    double c;
     for (int i = 0; i < 4; i++)
     {
         for (int y = i+1; y < 4; y++)
@@ -221,7 +221,7 @@ mat4 mat4::operator*(const mat4& mat)
 	{
 		for (int x = 0; x < 4; x++)
 		{
-			float sum = 0.0f;
+			double sum = 0.0;
 			for (int k = 0; k < 4; k++)
 			{
 				sum += this->matrix[k][y] * mat.matrix[x][k];
@@ -236,7 +236,7 @@ mat4 mat4::operator*(const mat4& mat)
 
 vec4 mat4::operator*(const vec4& vec) const
 {
-	vec4 result = vec4(0.0f, 0.0f, 0.0f, 0.0f);
+	vec4 result = vec4(0.0, 0.0, 0.0, 0.0);
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -323,12 +323,12 @@ vec3& vec3::operator=(const vec4& rhs)
 
 vec4::vec4()
 {
-	x = y = z = 0.0f;
-	w = 1.0f;
+	x = y = z = 0.0;
+	w = 1.0;
 }
 
 
-vec4::vec4(float x, float y, float z, float w /*= 1*/)
+vec4::vec4(double x, double y, double z, double w /*= 1*/)
 {
 	this->x = x;
 	this->y = y;
@@ -339,7 +339,7 @@ vec4::vec4(float x, float y, float z, float w /*= 1*/)
 
 void vec4::normalize()
 {
-    float length = (float)sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2) + pow(w, 2));
+    double length = (double)sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2) + pow(w, 2));
     if ( length != 0)
     {
         x = x / length;
@@ -357,12 +357,12 @@ void vec4::hgDivision()
         x = x / w;
         y = y / w;
         z = z / w;
-        w = 1.0f;
+        w = 1.0;
     }
 }
 
 
-float vec4::dot(const vec4& rhs) const
+double vec4::dot(const vec4& rhs) const
 {
     return (x * rhs.x) + (y * rhs.y) + (z * rhs.z) + (w * rhs.w);
 }
@@ -373,13 +373,13 @@ float vec4::dot(const vec4& rhs) const
  */
 vec4 vec4::cross(const vec4& V2) const
 {
-    return vec4(y * V2.z - z * V2.y, z * V2.x - x * V2.z, x * V2.y - y * V2.x, 0.0f);
+    return vec4(y * V2.z - z * V2.y, z * V2.x - x * V2.z, x * V2.y - y * V2.x, 0.0);
 }
 
 // Returns the EUCLIDEAN magnitude of a vector - ignores the w component
-float vec4::length()
+double vec4::length()
 {
-    return (float)sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
+    return (double)sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
 }
 
 
@@ -389,7 +389,7 @@ void vec4::print()
 }
 
 
-float vec4::operator[](int i) const
+double vec4::operator[](int i) const
 {
 	switch (i)
 	{
@@ -406,12 +406,12 @@ float vec4::operator[](int i) const
 		return w;
 		break;
 	default:
-		return 0.0f;
+		return 0.0;
 	}
 }
 
 
-vec4 vec4::operator*(float scalar) const
+vec4 vec4::operator*(double scalar) const
 {
     vec4 result = vec4(x * scalar, y * scalar, z * scalar, w);
     return result;
@@ -419,7 +419,7 @@ vec4 vec4::operator*(float scalar) const
 
 vec4 vec4::operator*(const mat4& rhs) const
 {
-    vec4 result = vec4(0.0f, 0.0f, 0.0f, 0.0f);
+    vec4 result = vec4(0.0, 0.0, 0.0, 0.0);
 
     for (int i = 0; i < 4; i++)
     {

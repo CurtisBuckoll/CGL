@@ -20,7 +20,7 @@ Color unpackColor(unsigned int color);
 // Multiply color values COMPONENT wise
 Color multiplyColors(Color c1, Color c2);
 
-// Multiply color values COMPONENT wise - with one floating point
+// Multiply color values COMPONENT wise - with one doubleing point
 Color multiplyColors(Color c1, Color_f c2);
 
-Color computeDepthShading(float Z, Color objColor, zBuffer* zBuff);
+Color computeDepthShading(double Z, Color objColor, zBuffer* zBuff);

@@ -6,10 +6,10 @@
 Camera::Camera()
 {
 	_CAMERA = mat4();
-	_forward = vec4(0.0f, 0.0f, 1.0f, 0.0f);
-	_right = vec4(1.0f, 0.0f, 0.0f, 0.0f);
-	_moveAmount = 0.1f;
-	_rotateAmount = 1.0f;
+	_forward = vec4(0.0, 0.0, 1.0, 0.0);
+	_right = vec4(1.0, 0.0, 0.0, 0.0);
+	_moveAmount = 0.1;
+	_rotateAmount = 1.0;
 }
 
 
@@ -19,10 +19,10 @@ Camera::~Camera()
 }
 
 
-void Camera::updateCamera(bool* keys, Lighting* lightEngine, float deltaTime)
+void Camera::updateCamera(bool* keys, Lighting* lightEngine, double deltaTime)
 {
-	float rotate = _rotateAmount * deltaTime;
-	float move = _moveAmount * deltaTime;
+	double rotate = _rotateAmount * deltaTime;
+	double move = _moveAmount * deltaTime;
 
 	if (keys[SDLK_COMMA])
 	{
@@ -75,7 +75,7 @@ void Camera::updateCamera(bool* keys, Lighting* lightEngine, float deltaTime)
 		_CAMERA = updateMatrix * _CAMERA;
 	}
 
-	vec4 eyePoint = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	vec4 eyePoint = vec4(0.0, 0.0, 0.0, 1.0);
 	eyePoint = _CAMERA * eyePoint;
 	lightEngine->setEyePoint(eyePoint);
 }

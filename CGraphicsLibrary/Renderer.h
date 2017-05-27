@@ -46,8 +46,8 @@ private:
 	zBuffer* _zBuffer;
 	Clip _frustum;
 
-	float _depthNear;
-	float _depthFar;
+	double _depthNear;
+	double _depthFar;
 	Color_f _ambientColor;
 	Color _depthColor;
 	Color _surfaceColor;

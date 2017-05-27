@@ -21,10 +21,10 @@ void writeSphere(std::string fileName)
 	
 	for (int i = 19; i >= -19; i--)
 	{
-		float y = (float)i / 20;
-		vec4 v1 = vec4(sqrt(1 - pow(y + 0.05f, 2)), (y + 0.05f), 0.0f);
-		vec4 v2 = vec4(sqrt(1 - pow(y, 2)), y, 0.0f);
-		vec4 v3 = vec4(sqrt(1 - pow(y - 0.05f, 2)), (y - 0.05f), 0.0f);
+		double y = (double)i / 20;
+		vec4 v1 = vec4(sqrt(1 - pow(y + 0.05f, 2)), (y + 0.05f), 0.0);
+		vec4 v2 = vec4(sqrt(1 - pow(y, 2)), y, 0.0);
+		vec4 v3 = vec4(sqrt(1 - pow(y - 0.05f, 2)), (y - 0.05f), 0.0);
 
 		for (int k = 0; k < 20; k++)
 		{

@@ -12,20 +12,20 @@ zBuffer::zBuffer()
 }
 
 
-zBuffer::zBuffer(int w, int h, float depth_near, float depth_far, Color depth_color) :
+zBuffer::zBuffer(int w, int h, double depth_near, double depth_far, Color depth_color) :
 	width(w),
 	height(h),
 	depthNear(depth_near),
 	depthFar(depth_far),
 	depthColor(depth_color)
 {
-	buffer = new float*[w];
+	buffer = new double*[w];
 	for (int x = 0; x < w; x++)
 	{
-		buffer[x] = new float[h];
+		buffer[x] = new double[h];
 		for (int y = 0; y < h; y++)
 		{
-			buffer[x][y] = std::numeric_limits<float>::max();
+			buffer[x][y] = std::numeric_limits<double>::max();
 		}
 	}
 }
@@ -59,10 +59,10 @@ zBuffer& zBuffer::operator=(const zBuffer& rhs)
 	}
 	else
 	{
-		buffer = new float*[width];
+		buffer = new double*[width];
 		for (int x = 0; x < width; x++)
 		{
-			buffer[x] = new float[height];
+			buffer[x] = new double[height];
 			for (int y = 0; y < height; y++)
 			{
 				buffer[x][y] = rhs.buffer[x][y];
@@ -79,7 +79,7 @@ void zBuffer::reset()
 	{
 		for (int y = 0; y < height; y++)
 		{
-			buffer[x][y] = std::numeric_limits<float>::max();
+			buffer[x][y] = std::numeric_limits<double>::max();
 		}
 	}
 }

@@ -11,14 +11,14 @@ private:
 	vec4 _forward;
 	vec4 _right;
 
-	float _moveAmount;
-	float _rotateAmount;
+	double _moveAmount;
+	double _rotateAmount;
 
 public:
 	Camera();
 	~Camera();
 
-	void updateCamera(bool* keys, Lighting* lightEngine, float deltaTime);
+	void updateCamera(bool* keys, Lighting* lightEngine, double deltaTime);
 
 	mat4 getCameraMatrix();
 };

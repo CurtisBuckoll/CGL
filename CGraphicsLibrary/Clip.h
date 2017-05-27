@@ -8,19 +8,19 @@
 
 
 struct FrustumParams {
-	float hither;
-	float yon;
-	float xLo;
-	float xHi;
-	float yLo;
-	float yHi;
+	double hither;
+	double yon;
+	double xLo;
+	double xHi;
+	double yLo;
+	double yHi;
 
 	FrustumParams()
 	{
-		hither = yon = xLo = xHi = yLo = yHi = 0.0f;
+		hither = yon = xLo = xHi = yLo = yHi = 0.0;
 	}
 
-	FrustumParams(float Hither, float Yon, float XLo, float YLo, float XHi, float YHi) :
+	FrustumParams(double Hither, double Yon, double XLo, double YLo, double XHi, double YHi) :
 		hither(Hither),
 		yon(Yon),
 		xLo(XLo),

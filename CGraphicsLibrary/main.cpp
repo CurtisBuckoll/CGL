@@ -17,7 +17,7 @@ const int WIN_WIDTH = 650;
 const int WIN_HEIGHT = 650;
 const int FPS = 25;
 const int PRINT_FPS_FREQ = 25;
-const float MOVESPEED = 0.10f;
+const double MOVESPEED = 0.10;
 
 // Entry
 int main(int argc, char** argv)
@@ -47,7 +47,7 @@ int main(int argc, char** argv)
 	// Initialize FPS limiter and main loop
 	FrameRateLimiter fpsLimiter(FPS, MOVESPEED, PRINT_FPS_FREQ);
 	bool running = true;
-	float deltaTime = 1.0f;
+	double deltaTime = 1.0;
 
 	// Loop
 	while (running) 

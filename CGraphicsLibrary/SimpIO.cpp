@@ -20,10 +20,10 @@ void SimpIO::TransformToWorld(const DynamicArray<Vertex>& vertices, std::vector<
 		newVertex.pos_WS = _CTM * newVertex.pos;
 
 		// Transform the normal with respect to WSC, if a nonzero normal provided
-		if (newVertex.normal != vec4(0.0f, 0.0f, 0.0f, 0.0f))
+		if (newVertex.normal != vec4(0.0, 0.0, 0.0, 0.0))
 		{
 			newVertex.normal = newVertex.normal * _invCTM;
-			newVertex.normal.w = 0.0f;  
+			newVertex.normal.w = 0.0;  
 			newVertex.normal.normalize();
 		}
 
@@ -31,7 +31,7 @@ void SimpIO::TransformToWorld(const DynamicArray<Vertex>& vertices, std::vector<
 	}
 
 	// Compute default face normal - behaviour will set line/point normals to 0.
-	vec4 faceNormal = vec4(0.0f, 0.0f, 0.0f, 0.0f);
+	vec4 faceNormal = vec4(0.0, 0.0, 0.0, 0.0);
 	if (vertexList.size() >= 3)
 	{
 		faceNormal = cross(vertexList[2].pos_WS, vertexList[1].pos_WS, vertexList[0].pos_WS);
@@ -40,10 +40,10 @@ void SimpIO::TransformToWorld(const DynamicArray<Vertex>& vertices, std::vector<
 	// Provide a default face normal to a vertex if one is not specified
 	for (unsigned int i = 0; i < vertexList.size(); i++)
 	{
-		if (vertexList[i].normal == vec4(0.0f, 0.0f, 0.0f, 0.0f))
+		if (vertexList[i].normal == vec4(0.0, 0.0, 0.0, 0.0))
 		{
 			vertexList[i].normal = faceNormal;
-			vertexList[i].normal.w = 0.0f;
+			vertexList[i].normal.w = 0.0;
 			vertexList[i].normal.normalize();
 		}
 	}
@@ -85,7 +85,7 @@ void ReportSyntaxError(std::vector<std::string> tokens, std::string errorMsg = "
 SimpIO::SimpIO(std::string filepath,
 	Lighting* lightEngine, PolygonList* polygons,
 	mat4 CTM, mat4 CAMERA, FrustumParams f_params,
-	float depthNear, float depthFar,
+	double depthNear, double depthFar,
 	Color_f ambientColor, Color depthColor, Color surfaceColor,
 	bool wireFrame) :
 	_wireFrame(wireFrame),
@@ -128,12 +128,12 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 	/* --------------------------------------------------------------------------- SCALE */
 	else if (tokens[0] == "scale")
 	{
-		float x, y, z;
+		double x, y, z;
 		if (tokens.size() == 4)
 		{
-			x = stof(tokens[1]);
-			y = stof(tokens[2]);
-			z = stof(tokens[3]);
+			x = stod(tokens[1]);
+			y = stod(tokens[2]);
+			z = stod(tokens[3]);
 			_CTM.scale(x, y, z);
 		}
 		else
@@ -149,7 +149,7 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 		if (tokens[1][0] >= 'X' && tokens[1][0] <= 'Z' && tokens.size() == 3)
 		{
 			axis = (Axis)tokens[1][0];
-			float angle = stof(tokens[2]);
+			double angle = stod(tokens[2]);
 			_CTM.rotate(angle, axis);
 		}
 		else
@@ -163,10 +163,10 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 	{
 		if (tokens.size() == 4)
 		{
-			float x, y, z;
-			x = stof(tokens[1]);
-			y = stof(tokens[2]);
-			z = stof(tokens[3]);
+			double x, y, z;
+			x = stod(tokens[1]);
+			y = stod(tokens[2]);
+			z = stod(tokens[3]);
 			_CTM.translate(x, y, z);
 		}
 		else
@@ -181,31 +181,31 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 		DynamicArray<Vertex> vertices;
 		if (tokens.size() == 7)
 		{
-			vec4 pos1 = vec4(stof(tokens[1]), stof(tokens[2]), stof(tokens[3]));
-			Vertex v1 = Vertex(pos1, pos1, vec4(0.0f, 0.0f, 0.0f, 0.0f), _surfaceColor);
+			vec4 pos1 = vec4(stod(tokens[1]), stod(tokens[2]), stod(tokens[3]));
+			Vertex v1 = Vertex(pos1, pos1, vec4(0.0, 0.0, 0.0, 0.0), _surfaceColor);
 			v1.color = computeAmbientLight(v1.color);
 			vertices.append(v1);
 
-			vec4 pos2 = vec4(stof(tokens[4]), stof(tokens[5]), stof(tokens[6]));
-			Vertex v2 = Vertex(pos2, pos2, vec4(0.0f, 0.0f, 0.0f, 0.0f), _surfaceColor);
+			vec4 pos2 = vec4(stod(tokens[4]), stod(tokens[5]), stod(tokens[6]));
+			Vertex v2 = Vertex(pos2, pos2, vec4(0.0, 0.0, 0.0, 0.0), _surfaceColor);
 			v2.color = computeAmbientLight(v2.color);
 			vertices.append(v2);
 		}
 		else if (tokens.size() == 13)
 		{
-			vec4 pos1 = vec4(stof(tokens[1]), stof(tokens[2]), stof(tokens[3]));
-			Color c1 = Color((unsigned char)(255 * stof(tokens[4])),
-							 (unsigned char)(255 * stof(tokens[5])),
-							 (unsigned char)(255 * stof(tokens[6])));
-			Vertex v1 = Vertex(pos1, pos1, vec4(0.0f, 0.0f, 0.0f, 0.0f), c1);
+			vec4 pos1 = vec4(stod(tokens[1]), stod(tokens[2]), stod(tokens[3]));
+			Color c1 = Color((unsigned char)(255 * stod(tokens[4])),
+							 (unsigned char)(255 * stod(tokens[5])),
+							 (unsigned char)(255 * stod(tokens[6])));
+			Vertex v1 = Vertex(pos1, pos1, vec4(0.0, 0.0, 0.0, 0.0), c1);
 			v1.color = computeAmbientLight(v1.color);
 			vertices.append(v1);
 
-			vec4 pos2 = vec4(stof(tokens[7]), stof(tokens[8]), stof(tokens[9]));
-			Color c2 = Color((unsigned char)(255 * stof(tokens[10])),
-							 (unsigned char)(255 * stof(tokens[11])),
-							 (unsigned char)(255 * stof(tokens[12])));
-			Vertex v2 = Vertex(pos2, pos2, vec4(0.0f, 0.0f, 0.0f, 0.0f), c2);
+			vec4 pos2 = vec4(stod(tokens[7]), stod(tokens[8]), stod(tokens[9]));
+			Color c2 = Color((unsigned char)(255 * stod(tokens[10])),
+							 (unsigned char)(255 * stod(tokens[11])),
+							 (unsigned char)(255 * stod(tokens[12])));
+			Vertex v2 = Vertex(pos2, pos2, vec4(0.0, 0.0, 0.0, 0.0), c2);
 			v2.color = computeAmbientLight(v2.color);
 			vertices.append(v2);
 		}
@@ -234,8 +234,8 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 		{
 			for (unsigned int i = 1; i < tokens.size(); i += 3)
 			{
-				vec4 position = vec4(stof(tokens[i]), stof(tokens[i + 1]), stof(tokens[i + 2]));
-				Vertex vertex = Vertex(position, position, vec4(0.0f, 0.0f, 0.0f, 0.0f), _surfaceColor);
+				vec4 position = vec4(stod(tokens[i]), stod(tokens[i + 1]), stod(tokens[i + 2]));
+				Vertex vertex = Vertex(position, position, vec4(0.0, 0.0, 0.0, 0.0), _surfaceColor);
 				vertices.append(vertex);
 			}
 		}
@@ -243,11 +243,11 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 		{
 			for (unsigned int i = 1; i < tokens.size(); i += 6)
 			{
-				vec4 position = vec4(stof(tokens[i]), stof(tokens[i + 1]), stof(tokens[i + 2]));
-				Color color = Color((unsigned char)(255 * stof(tokens[i + 3])),
-									(unsigned char)(255 * stof(tokens[i + 4])),
-									(unsigned char)(255 * stof(tokens[i + 5])));
-				Vertex vertex = Vertex(position, position, vec4(0.0f, 0.0f, 0.0f, 0.0f), color);
+				vec4 position = vec4(stod(tokens[i]), stod(tokens[i + 1]), stod(tokens[i + 2]));
+				Color color = Color((unsigned char)(255 * stod(tokens[i + 3])),
+									(unsigned char)(255 * stod(tokens[i + 4])),
+									(unsigned char)(255 * stod(tokens[i + 5])));
+				Vertex vertex = Vertex(position, position, vec4(0.0, 0.0, 0.0, 0.0), color);
 				vertices.append(vertex);
 			}
 		}
@@ -332,14 +332,14 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 			_CAMERA = _CTM;
 
 			// Get eyepoint for lighting calculation
-			vec4 eyePoint = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+			vec4 eyePoint = vec4(0.0, 0.0, 0.0, 1.0);
 			eyePoint = _CTM * eyePoint;
 			_lightEngine->setEyePoint(eyePoint);
 			
 			// Get viewing frustum settings
-			_frustumParams = FrustumParams(stof(tokens[5]), stof(tokens[6]),
-										   stof(tokens[1]), stof(tokens[2]),
-										   stof(tokens[3]), stof(tokens[4]));
+			_frustumParams = FrustumParams(stod(tokens[5]), stod(tokens[6]),
+										   stod(tokens[1]), stod(tokens[2]),
+										   stod(tokens[3]), stod(tokens[4]));
 		}
 		else
 		{
@@ -386,18 +386,18 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 	/* ------------------------------------------------------------------------- AMBIENT */
 	else if (tokens[0] == "ambient")
 	{
-		_ambientColor = Color_f(stof(tokens[1]), stof(tokens[2]), stof(tokens[3]));
+		_ambientColor = Color_f(stod(tokens[1]), stod(tokens[2]), stod(tokens[3]));
 		_lightEngine->setAmbientLight(_ambientColor);
 	}
 
 	/* --------------------------------------------------------------------------- DEPTH */
 	else if (tokens[0] == "depth")
 	{
-		_depthNear = stof(tokens[1]);
-		_depthFar = stof(tokens[2]);
-		_depthColor = Color((unsigned char)(255 * stof(tokens[3])),
-							(unsigned char)(255 * stof(tokens[4])),
-							(unsigned char)(255 * stof(tokens[5])));
+		_depthNear = stod(tokens[1]);
+		_depthFar = stod(tokens[2]);
+		_depthColor = Color((unsigned char)(255 * stod(tokens[3])),
+							(unsigned char)(255 * stod(tokens[4])),
+							(unsigned char)(255 * stod(tokens[5])));
 	}
 
 	/* ------------------------------------------------------------------------- SURFACE */
@@ -405,10 +405,10 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 	{
 		if (tokens.size() == 6)
 		{
-			_surfaceColor = Color((unsigned char)(255 * stof(tokens[1])),
-				(unsigned char)(255 * stof(tokens[2])),
-				(unsigned char)(255 * stof(tokens[3])));
-			_lightEngine->setSurfaceProperties(stof(tokens[4]), (int)stof(tokens[5]));
+			_surfaceColor = Color((unsigned char)(255 * stod(tokens[1])),
+				(unsigned char)(255 * stod(tokens[2])),
+				(unsigned char)(255 * stod(tokens[3])));
+			_lightEngine->setSurfaceProperties(stod(tokens[4]), (int)stod(tokens[5]));
 		}
 		else
 		{
@@ -421,11 +421,11 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 	{
 		if (tokens.size() == 6)
 		{
-			vec4 origin = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+			vec4 origin = vec4(0.0, 0.0, 0.0, 1.0);
 			vec4 position = _CTM * origin;
 
-			Color_f lightColor = Color_f(stof(tokens[1]), stof(tokens[2]), stof(tokens[3]));
-			_lightEngine->addLightSource(position, stof(tokens[4]), stof(tokens[5]), lightColor);
+			Color_f lightColor = Color_f(stod(tokens[1]), stod(tokens[2]), stod(tokens[3]));
+			_lightEngine->addLightSource(position, stod(tokens[4]), stod(tokens[5]), lightColor);
 		}
 		else
 		{

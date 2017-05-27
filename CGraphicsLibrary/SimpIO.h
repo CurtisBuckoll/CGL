@@ -28,14 +28,14 @@ struct RenderArgs {
 	mat4 CTM;
 	mat4 CAMERA;
 	bool wireFrame;
-	float depthNear;
-	float depthFar;
+	double depthNear;
+	double depthFar;
 	Color_f ambientColor;
 	Color depthColor;
 	Color surfaceColor;
 	FrustumParams f_params;
 
-	RenderArgs(mat4 CTM_, mat4 CAMERA_, bool wireframe_, float depthNear_, float depthFar_,
+	RenderArgs(mat4 CTM_, mat4 CAMERA_, bool wireframe_, double depthNear_, double depthFar_,
 			   Color_f ambientColor_, Color depthColor_, Color surfaceColor_, FrustumParams f_params_) :
 		CTM(CTM_),
 		CAMERA(CAMERA_),
@@ -58,8 +58,8 @@ public:
 	SimpIO(std::string filepath,
 		   Lighting* lightEngine, PolygonList* polygons,
 		   mat4 CTM = mat4(), mat4 CAMERA = mat4(), FrustumParams f_params = FrustumParams(),
-		   float depthNear = 3.402823466e38, float depthFar = 3.402823466e38,
-		   Color_f ambientColor = Color_f(0.0f, 0.0f, 0.0f), Color depthColor = Color(0, 0, 0),
+		   double depthNear = 3.402823466e38, double depthFar = 3.402823466e38,
+		   Color_f ambientColor = Color_f(0.0, 0.0, 0.0), Color depthColor = Color(0, 0, 0),
 		   Color surfaceColor = Color(255, 255, 255), bool wireFrame = false);
 	~SimpIO();
 	RenderArgs Read();
@@ -71,8 +71,8 @@ private:
 	std::ifstream _currentFile;
 
 	bool _wireFrame;
-	float _depthNear;
-	float _depthFar;
+	double _depthNear;
+	double _depthFar;
 	Color_f _ambientColor;
 	Color _depthColor;
 	Color _surfaceColor;

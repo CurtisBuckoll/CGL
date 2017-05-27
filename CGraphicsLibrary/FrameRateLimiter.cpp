@@ -4,10 +4,10 @@
 #include <SDL\SDL.h>
 
 
-FrameRateLimiter::FrameRateLimiter(unsigned int FPS, float velocity, unsigned int printFPSfreq)
+FrameRateLimiter::FrameRateLimiter(unsigned int FPS, double velocity, unsigned int printFPSfreq)
 {
 	_FPS = FPS;
-	_MSPF = 1000.0f / FPS;
+	_MSPF = 1000.0 / FPS;
 	_velocity = velocity;
 	_printFrequency = printFPSfreq;
 	_frame = 0;
@@ -26,9 +26,9 @@ void FrameRateLimiter::setStartFrame()
 }
 
 
-void FrameRateLimiter::LimitFPS(float* deltaTime)
+void FrameRateLimiter::LimitFPS(double* deltaTime)
 {
-	float currFrameTime = static_cast<float>(SDL_GetTicks() - _startTime);
+	double currFrameTime = static_cast<double>(SDL_GetTicks() - _startTime);
 
 	if (_MSPF > currFrameTime) 
 	{
@@ -50,12 +50,12 @@ void FrameRateLimiter::printFPS()
 
 	if (frameNumber % _printFrequency == 0)
 	{
-		float avg = 0.0f;
+		double avg = 0.0;
 		for (unsigned int i = 0; i < NUM_FRAMES; i++)
 		{
 			avg += _frameTimes[i];
 		}
-		avg = (1000.0f * NUM_FRAMES) / avg;
+		avg = (1000.0 * NUM_FRAMES) / avg;
 
 		std::cout << "FPS " << avg << std::endl;
 	}
