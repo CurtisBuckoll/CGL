@@ -9,7 +9,18 @@ enum class Axis {
 	Z = 'Z'
 };
 
-// 4 x 1 doubleing point vector
+
+// 2 x 1 double vector
+struct vec2 {
+	double x;
+	double y;
+
+	vec2();
+	vec2(double x, double y);
+};
+
+
+// 4 x 1 double point vector
 struct vec4 {
 	double x;
 	double y;
@@ -22,6 +33,7 @@ struct vec4 {
     void normalize();
     void hgDivision();
     double dot(const vec4& rhs) const;
+
     /* Computes cross product between the difference of the three vertices passed in:
      * Performs V1 x V2
      */
@@ -37,6 +49,7 @@ struct vec4 {
     bool operator==(const vec4& p2) const;
     bool operator!=(const vec4& p2) const;
 };
+
 
 // 3 x 1 integer vector
 struct vec3 {
@@ -55,10 +68,12 @@ struct vec3 {
 	vec3& operator=(const vec4& rhs);
 };
 
+
 enum class MAT_TYPE
 {
     PROJECTION = 0
 };
+
 
 // 4 x 4 matrix
 struct mat4 {

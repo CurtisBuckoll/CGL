@@ -10,6 +10,7 @@
 struct vDescrip {
     int vIndex;
     int nIndex;
+	int tcIndex;
 };
 
 struct face {
@@ -20,7 +21,7 @@ class ObjReader
 {
 public:
     ObjReader(const std::string& filepath, std::vector<Vertex>* vertices,
-              std::vector<vec4>* normals, std::vector<face>* faces,
+              std::vector<vec4>* normals, std::vector<vec2>* textureCoords, std::vector<face>* faces,
               Color surfaceColor);
     ~ObjReader();
 
@@ -30,6 +31,7 @@ private:
     std::ifstream _currentFile;
     std::vector<Vertex>* _vertices;
     std::vector<vec4>* _normals;
+	std::vector<vec2>* _textureCoords;
     std::vector<face>* _faces;
 
     Color _surfaceColor;
@@ -37,6 +39,7 @@ private:
     void PrintArrayInfo();
     int absoluteIndex_vertex(int index);
     int absoluteIndex_normal(int index);
+	int absoluteIndex_textureCoordinate(int index);
     face splitFaceInstr(const std::vector<std::string>& tokens);
     void InterpretLineObj(const std::vector<std::string>& tokens);
 };

@@ -57,7 +57,7 @@ void ObjReader::PrintArrayInfo()
 
 
 ObjReader::ObjReader(const std::string& filepath, std::vector<Vertex>* vertices,
-                     std::vector<vec4>* normals, std::vector<face>* faces,
+                     std::vector<vec4>* normals, std::vector<vec2>* textureCoords, std::vector<face>* faces,
                      Color surfaceColor) :
     _surfaceColor(surfaceColor)
 {
@@ -71,11 +71,13 @@ ObjReader::ObjReader(const std::string& filepath, std::vector<Vertex>* vertices,
 
     _vertices = vertices;
     _normals = normals;
+	_textureCoords = textureCoords;
     _faces = faces;
 
-    // Append 'empty' vertices to index 0 of _vertices and _normals
+    // Append 'empty' vertices to index 0 of _vertices and _normals and _textureCoords
     _vertices->push_back(Vertex(vec4(0.0, 0.0, 0.0, 0.0), vec4(0.0, 0.0, 0.0, 0.0), vec4(0.0, 0.0, 0.0, 0.0), Color()));
     _normals->push_back(vec4(0.0, 0.0, 0.0, 0.0));
+	_textureCoords->push_back(vec2(0.0, 0.0));
 }
 
 
@@ -103,6 +105,17 @@ int ObjReader::absoluteIndex_normal(int index)
     }
     return (int)_normals->size() + index;
 }
+
+
+int ObjReader::absoluteIndex_textureCoordinate(int index)
+{
+	if (index >= 0)
+	{
+		return index;
+	}
+	return (int)_textureCoords->size() + index;
+}
+
 
 
 face ObjReader::splitFaceInstr(const std::vector<std::string>& tokens)
@@ -134,6 +147,7 @@ face ObjReader::splitFaceInstr(const std::vector<std::string>& tokens)
         // scan texture index and ignore
         while (tokens[i][C] != '/' && tokens[i][C] != '\0')
         {
+			value += tokens[i][C];
             C++;
         }
         if (tokens[i][C] == '\0')
@@ -142,7 +156,14 @@ face ObjReader::splitFaceInstr(const std::vector<std::string>& tokens)
             currFace.vertices.push_back(currVertex);
             continue;
         }
+		/* new! */
+		else
+		{
+			currVertex.tcIndex = absoluteIndex_textureCoordinate(stoi(value));
+		}
+		/* end new.. */
 
+		value = "";
         C++;
 
         // extract normal index
@@ -237,6 +258,17 @@ void ObjReader::InterpretLineObj(const std::vector<std::string>& tokens)
             _faces->push_back(Face);
         }
     }
+	else if (tokens[0] == "vt")
+	{
+		if (tokens.size() == 3 || tokens.size() == 4)	// Ignore optional component
+		{
+			_textureCoords->push_back(vec2(stod(tokens[1]), stod(tokens[2])));
+		}
+		else
+		{
+			ReportSytaxErrorObj(tokens);
+		}
+	}
 }
 
 

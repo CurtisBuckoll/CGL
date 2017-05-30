@@ -352,11 +352,12 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 	{
 		std::vector<Vertex> vertices;
 		std::vector<vec4> normals;
+		std::vector<vec2> textureCoords;
 		std::vector<face> faces;
 		_invCTM = _CTM.inverse();
 
 		// Populate the lists with .obj data
-		ObjReader object("./" + tokens[1] + ".obj", &vertices, &normals, &faces, _surfaceColor);
+		ObjReader object("./" + tokens[1] + ".obj", &vertices, &normals, &textureCoords, &faces, _surfaceColor);
 		object.Read();
 
 		// Render the data
