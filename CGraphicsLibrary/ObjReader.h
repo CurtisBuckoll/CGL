@@ -21,7 +21,7 @@ class ObjReader
 {
 public:
     ObjReader(const std::string& filepath, std::vector<Vertex>* vertices,
-              std::vector<vec4>* normals, std::vector<vec2>* textureCoords, std::vector<face>* faces,
+              std::vector<vec4>* normals, std::vector<UV>* textureCoords, std::vector<face>* faces,
               Color surfaceColor);
     ~ObjReader();
 
@@ -31,7 +31,7 @@ private:
     std::ifstream _currentFile;
     std::vector<Vertex>* _vertices;
     std::vector<vec4>* _normals;
-	std::vector<vec2>* _textureCoords;
+	std::vector<UV>* _textureCoords;
     std::vector<face>* _faces;
 
     Color _surfaceColor;

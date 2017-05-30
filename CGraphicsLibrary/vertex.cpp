@@ -3,6 +3,41 @@
 #include <iostream>
 
 
+UV::UV()
+{
+	u = 0.0;
+	v = 0.0;
+}
+
+
+UV::UV(double U, double V)
+{
+	u = U;
+	v = V;
+}
+
+
+UV UV::operator*(double scalar) const
+{
+	return UV(u * scalar, v * scalar);
+}
+
+
+UV UV::operator+(UV rhs) const
+{
+	return UV(u + rhs.u, v + rhs.v);
+}
+
+
+UV UV::operator-(UV rhs) const
+{
+	return UV(u - rhs.u, v - rhs.v);
+}
+
+
+/**/
+
+
 Color_f::Color_f()
 {
     r = 0.0;
@@ -41,6 +76,9 @@ Color_f Color_f::operator-(Color_f rhs) const
 {
 	return Color_f(r - rhs.r, g - rhs.g, b - rhs.b);
 }
+
+
+/**/
 
 
 Color::Color()
@@ -93,6 +131,9 @@ Color Color::operator*(double scalar) const
 {
 	return Color((unsigned char)(r * scalar), (unsigned char)(g * scalar), (unsigned char)(b * scalar));
 }
+
+
+/**/
 
 
 Vertex::Vertex()

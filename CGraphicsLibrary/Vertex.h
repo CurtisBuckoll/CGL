@@ -7,17 +7,12 @@ struct UV {
 	double u;
 	double v;
 
-	UV()
-	{
-		u = 0.0;
-		v = 0.0;
-	}
+	UV();
+	UV(double U, double V);
 
-	UV(double U, double V)
-	{
-		u = U;
-		v = V;
-	}
+	UV operator*(double scalar) const;
+	UV operator+(UV rhs) const;
+	UV operator-(UV rhs) const;
 };
 
 /* for storing colour values between 0 and 1 */

@@ -190,6 +190,7 @@
     <None Include="pageF.simp" />
     <None Include="README.md" />
     <None Include="sphere.simp" />
+    <None Include="squareTexture.simp" />
     <None Include="test.simp" />
     <None Include="test1.simp" />
     <None Include="test2.simp" />

@@ -10,16 +10,6 @@ enum class Axis {
 };
 
 
-// 2 x 1 double vector
-struct vec2 {
-	double x;
-	double y;
-
-	vec2();
-	vec2(double x, double y);
-};
-
-
 // 4 x 1 double point vector
 struct vec4 {
 	double x;

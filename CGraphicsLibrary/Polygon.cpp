@@ -1,6 +1,7 @@
 #include "Polygon.h"
 
 #include "utility.h"
+#include "Texture2D.h"
 
 #include <iostream>
 #include <math.h>
@@ -88,6 +89,17 @@ inline Color_f getSlope_color(const Color_f& c1, const Color_f& c2, double dy)
 	return dc * (-1.0 / dy);
 }
 
+inline UV getSlope_uv(const UV& uv1, const UV& uv2, double dy)
+{
+	if (dy == 0)
+	{
+		return UV(0.0, 0.0);
+	}
+	UV duv = uv2 - uv1;
+
+	return duv * (-1.0 / dy);
+}
+
 
 /*  Performs perspective correct interpolation
  */
@@ -150,6 +162,14 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 		}
 		Line::DDA(points[0], points[points.size() - 1], zbuffer, window);
 		return;
+	}
+
+	// TEXTURE MAPPING TEST STUFF
+	Texture2D texture = Texture2D("../assets/textures/wood_crate.png");
+
+	for (unsigned int i = 0; i < points.size(); i++)
+	{
+		points[i].uv = UV(points[i].uv.u * texture.getWidth(), points[i].uv.v * (texture.getHeight() - 1));
 	}
 
 	// Enable rounded integer vertex coordinates
@@ -257,6 +277,14 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 	vec4 wscSlope_L = getSlope_vertex(wsc_L1, wsc_L2, dy_L);
 	vec4 wscSlope_R = getSlope_vertex(wsc_R1, wsc_R2, dy_R);
 
+	/** Set up Perspective Correct UV interpolation **/
+	UV uv_L1 = left_array[index_L].uv * (1.0 / left_array[index_L].pos.z);
+	UV uv_L2 = left_array[index_L + 1].uv * (1.0 / left_array[index_L + 1].pos.z);
+	UV uv_R1 = right_array[index_R].uv * (1.0 / right_array[index_R].pos.z);
+	UV uv_R2 = right_array[index_R + 1].uv * (1.0 / right_array[index_R + 1].pos.z);
+	UV uvSlope_L = getSlope_uv(uv_L1, uv_L2, dy_L);
+	UV uvSlope_R = getSlope_uv(uv_R1, uv_R2, dy_R);
+
 	for (int y = maxY; y > minY; y--)
 	{
 		if (y == left_array[index_L + 1].pos_CS.y)
@@ -280,6 +308,10 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 			wsc_L1 = wsc_L2;
 			wsc_L2 = left_array[index_L + 1].pos_WS * (1.0 / left_array[index_L + 1].pos.z);
 			wscSlope_L = getSlope_vertex(wsc_L1, wsc_L2, dy);
+
+			uv_L1 = uv_L2;
+			uv_L2 = left_array[index_L + 1].uv * (1.0 / left_array[index_L + 1].pos.z);
+			uvSlope_L = getSlope_uv(uv_L1, uv_L2, dy_L);
 		}
 
 		if (y == right_array[index_R + 1].pos_CS.y)
@@ -304,6 +336,9 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 			wsc_R2 = right_array[index_R + 1].pos_WS * (1.0 / right_array[index_R + 1].pos.z);
 			wscSlope_R = getSlope_vertex(wsc_R1, wsc_R2, dy);
 
+			uv_R1 = uv_R2;
+			uv_R2 = right_array[index_R + 1].uv * (1.0 / right_array[index_R + 1].pos.z);
+			uvSlope_R = getSlope_uv(uv_R1, uv_R2, dy_R);
 		}
 
 		int L_endpoint = (int)round((left_array[index_L].pos_CS.y - y) * slope_L + left_array[index_L].pos_CS.x);
@@ -319,6 +354,7 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 		vec4 dNorm_dx;
 		vec4 dWSC_dx;
 		Color_f dcdx;
+		UV duv_dx;
 
 		if (dx != 0)
 		{
@@ -326,6 +362,7 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 			dNorm_dx = (norm_R1 - norm_L1) *  (1.0 / dx);
 			dWSC_dx = (wsc_R1 - wsc_L1) *  (1.0 / dx);
 			dcdx = (color_R1 - color_L1) * (1.0 / dx);
+			duv_dx = (uv_R1 - uv_L1) * (1.0 / dx);
 		}
 		else
 		{
@@ -333,12 +370,14 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 			dNorm_dx = vec4(0.0, 0.0, 0.0, 0.0);
 			dWSC_dx = vec4(0.0, 0.0, 0.0, 0.0);
 			dcdx = Color_f(0.0, 0.0, 0.0);
+			duv_dx = UV(0.0, 0.0);
 		}
 
 		double zPrimeCurrent = zCoord_L1;
 		vec4 normCurrent = norm_L1;
 		vec4 wscCurrent = wsc_L1;
 		Color_f colorCurrent = color_L1;
+		UV uvCurrent = uv_L1;
 
 		for (int x = L_endpoint; x < R_endpoint; x++)
 		{
@@ -346,10 +385,15 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 			vec4 PerspCorr_Normal = normCurrent * PerspCorr_Z;
 			vec4 PerspCorr_WSC = wscCurrent * PerspCorr_Z;
 			Color_f PerspCorr_Color = colorCurrent * PerspCorr_Z;
+			UV PerspCorr_UV = uvCurrent * PerspCorr_Z;
 
 			if (x >= 0 && x < zbuffer->width && y >= 0 && y < zbuffer->height && PerspCorr_Z < zbuffer->buffer[x][y])
 			{
 				Color color = Color(PerspCorr_Color);
+
+				//std::cout << round(PerspCorr_UV.u) << " " << round(PerspCorr_UV.v) << std::endl;
+				RGBA texel = texture.getTexel(PerspCorr_UV.u, PerspCorr_UV.v);
+				color = Color(texel.r, texel.g, texel.b);
 
 				//color = points[0].color;
 
@@ -367,6 +411,7 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 			colorCurrent = colorCurrent + dcdx;
 			normCurrent = normCurrent + dNorm_dx;
 			wscCurrent = wscCurrent + dWSC_dx;
+			uvCurrent = uvCurrent + duv_dx;
 		}
 
 		// Increment lerp values
@@ -381,5 +426,8 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 
 		wsc_L1 = wsc_L1 + wscSlope_L;
 		wsc_R1 = wsc_R1 + wscSlope_R;
+
+		uv_L1 = uv_L1 + uvSlope_L;
+		uv_R1 = uv_R1 + uvSlope_R;
 	}
 }

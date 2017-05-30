@@ -254,20 +254,6 @@ vec4 mat4::operator*(const vec4& vec) const
 /*	vec3 --------------------------------------------------------------------------- */
 
 
-vec2::vec2()
-{
-	x = 0.0;
-	y = 0.0;
-}
-
-
-vec2::vec2(double x, double y) 
-{
-	this->x = x;
-	this->y = y;
-}
-
-
 vec3::vec3() : color(0xffffffff)
 {
 	x = y = z = 0;

@@ -57,7 +57,7 @@ void ObjReader::PrintArrayInfo()
 
 
 ObjReader::ObjReader(const std::string& filepath, std::vector<Vertex>* vertices,
-                     std::vector<vec4>* normals, std::vector<vec2>* textureCoords, std::vector<face>* faces,
+                     std::vector<vec4>* normals, std::vector<UV>* textureCoords, std::vector<face>* faces,
                      Color surfaceColor) :
     _surfaceColor(surfaceColor)
 {
@@ -77,7 +77,7 @@ ObjReader::ObjReader(const std::string& filepath, std::vector<Vertex>* vertices,
     // Append 'empty' vertices to index 0 of _vertices and _normals and _textureCoords
     _vertices->push_back(Vertex(vec4(0.0, 0.0, 0.0, 0.0), vec4(0.0, 0.0, 0.0, 0.0), vec4(0.0, 0.0, 0.0, 0.0), Color()));
     _normals->push_back(vec4(0.0, 0.0, 0.0, 0.0));
-	_textureCoords->push_back(vec2(0.0, 0.0));
+	_textureCoords->push_back(UV(0.0, 0.0));
 }
 
 
@@ -153,12 +153,14 @@ face ObjReader::splitFaceInstr(const std::vector<std::string>& tokens)
         if (tokens[i][C] == '\0')
         {
             currVertex.nIndex = 0;
+			currVertex.tcIndex = 0;
             currFace.vertices.push_back(currVertex);
             continue;
         }
 		/* new! */
-		else
+		else if (value != "")
 		{
+			std::cout << value << std::endl;
 			currVertex.tcIndex = absoluteIndex_textureCoordinate(stoi(value));
 		}
 		/* end new.. */
@@ -262,7 +264,7 @@ void ObjReader::InterpretLineObj(const std::vector<std::string>& tokens)
 	{
 		if (tokens.size() == 3 || tokens.size() == 4)	// Ignore optional component
 		{
-			_textureCoords->push_back(vec2(stod(tokens[1]), stod(tokens[2])));
+			_textureCoords->push_back(UV(stod(tokens[1]), stod(tokens[2])));
 		}
 		else
 		{

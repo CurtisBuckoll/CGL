@@ -72,6 +72,12 @@ RGBA Texture2D::getTexel(unsigned int x, unsigned int y)
 {
 	unsigned long base = (y * 4 * _width) + (x * 4);
 
+	if (base >= _imgData.size())
+	{
+		//std::cout << "Texel out of range: " << base << " " << _imgData.size() << std::endl;
+		return RGBA(255, 255, 255, 255);
+	}
+
 	return  RGBA(_imgData[base + 2],	// Data stored BGRA ordering
 				 _imgData[base + 1],
 				 _imgData[base], 

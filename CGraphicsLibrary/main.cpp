@@ -13,7 +13,7 @@
 #include "Texture2D.h"
 
 // Global parameters
-std::string FILEPATH = "./lightScene.simp";
+std::string FILEPATH = "./squareTexture.simp";
 const int WIN_WIDTH = 650;
 const int WIN_HEIGHT = 650;
 const int FPS = 25;

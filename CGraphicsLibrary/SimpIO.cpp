@@ -352,13 +352,18 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 	{
 		std::vector<Vertex> vertices;
 		std::vector<vec4> normals;
-		std::vector<vec2> textureCoords;
+		std::vector<UV> textureCoords;
 		std::vector<face> faces;
 		_invCTM = _CTM.inverse();
 
 		// Populate the lists with .obj data
 		ObjReader object("./" + tokens[1] + ".obj", &vertices, &normals, &textureCoords, &faces, _surfaceColor);
 		object.Read();
+
+		//for (int i = 0; i < textureCoords.size(); i++)
+		//{
+			//std::cout << textureCoords[i].u << " " << textureCoords[i].v << std::endl;
+		//}
 
 		// Render the data
 		for (unsigned int i = 0; i < faces.size(); i++)
@@ -368,6 +373,7 @@ void SimpIO::Interpret(const std::vector<std::string>& tokens)
 			{
 				Vertex currVertex = vertices[faces[i].vertices[k].vIndex];
 				currVertex.normal = normals[faces[i].vertices[k].nIndex];
+				currVertex.uv = textureCoords[faces[i].vertices[k].tcIndex];
 				vertexList.append(currVertex);
 			}
 

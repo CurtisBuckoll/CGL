@@ -244,6 +244,9 @@
     <None Include="pageF.simp">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="squareTexture.simp">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="CGraphicsLibrary.rc">
