@@ -12,8 +12,14 @@ void loadFile(std::vector<unsigned char>& data, const std::string& filename)
 
 	// Find filesize
 	std::streamsize size = 0;
-	if (file.seekg(0, std::ios::end).good()) size = file.tellg();
-	if (file.seekg(0, std::ios::beg).good()) size -= file.tellg();
+	if (file.seekg(0, std::ios::end).good())
+	{
+		size = file.tellg();
+	}
+	if (file.seekg(0, std::ios::beg).good())
+	{
+		size -= file.tellg();
+	}
 
 	// Read file into vector
 	if (size > 0)
@@ -47,7 +53,7 @@ Texture2D::Texture2D(const std::string& filepath)
 		exit(-1);
 	}
 
-	int errorCode = decodePNG(_imgData, _width, _height, &pngData[0], (size_t)pngData.size());
+	int errorCode = decodePNG(_imgData, _width, _height, &pngData[0], (size_t)pngData.size(), true);
 	if (errorCode != 0)
 	{
 		std::cout << "Error: " + filepath + " failed to decode. Quitting." << std::endl;
@@ -66,8 +72,8 @@ RGBA Texture2D::getTexel(unsigned int x, unsigned int y)
 {
 	unsigned long base = (y * 4 * _width) + (x * 4);
 
-	return  RGBA(_imgData[base], 
+	return  RGBA(_imgData[base + 2],	// Data stored BGRA ordering
 				 _imgData[base + 1],
-				 _imgData[base + 2], 
+				 _imgData[base], 
 				 _imgData[base + 3]);
 }

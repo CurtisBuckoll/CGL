@@ -34,5 +34,7 @@ public:
 	~Texture2D();
 
 	RGBA getTexel(unsigned int x, unsigned int y);
+	unsigned long getWidth() { return _width; }
+	unsigned long getHeight() { return _height; }
 };
 

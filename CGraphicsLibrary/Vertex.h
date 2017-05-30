@@ -2,6 +2,24 @@
 
 #include "Matrix.h"
 
+/* UV coordinates for texture mapping */
+struct UV {
+	double u;
+	double v;
+
+	UV()
+	{
+		u = 0.0;
+		v = 0.0;
+	}
+
+	UV(double U, double V)
+	{
+		u = U;
+		v = V;
+	}
+};
+
 /* for storing colour values between 0 and 1 */
 struct Color_f {
     double r;
@@ -49,9 +67,10 @@ struct Vertex
 
     vec4 normal;
     Color color;
+	UV uv;
 
     Vertex();
-    Vertex(const vec4& Pos, const vec4& Pos_worldSpace, const vec4& Normal, Color Colour);
+    Vertex(const vec4& Pos, const vec4& Pos_worldSpace, const vec4& Normal, Color Colour, const UV& uvCoords = UV());
     void EnableCSCoords();
     void print();
 };

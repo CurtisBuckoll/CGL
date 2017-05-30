@@ -10,6 +10,7 @@
 #include "InputManager.h"
 #include "Camera.h"
 #include "FrameRateLimiter.h"
+#include "Texture2D.h"
 
 // Global parameters
 std::string FILEPATH = "./lightScene.simp";
@@ -49,6 +50,8 @@ int main(int argc, char** argv)
 	bool running = true;
 	double deltaTime = 1.0;
 
+	//Texture2D testTexture = Texture2D("../assets/textures/wood_crate.png");
+
 	// Loop
 	while (running) 
 	{
@@ -59,6 +62,16 @@ int main(int argc, char** argv)
 		
 		renderer.setRenderModes(userInput.getKeys());
 		renderer.setCameraMatrix(camera.getCameraMatrix());
+		/*
+		for (int y = 0; y < testTexture.getHeight(); y++)
+		{
+			for (int x = 0; x < testTexture.getWidth(); x++)
+			{
+				RGBA texel = testTexture.getTexel(x, y);
+				window.setPixel(x, y, Color(texel.r, texel.g, texel.b));
+			}
+		}
+		*/
 		renderer.renderData();
 
 		fpsLimiter.LimitFPS(&deltaTime);

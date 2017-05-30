@@ -102,16 +102,18 @@ Vertex::Vertex()
     pos_WS = vec4(0.0, 0.0, 0.0, 0.0);
     normal = vec4(0.0, 0.0, 0.0, 0.0);
     color = Color(0, 0, 0);
+	uv = UV();
 }
 
 
-Vertex::Vertex(const vec4& Pos, const vec4& Pos_worldSpace, const vec4& Normal, Color Colour)
+Vertex::Vertex(const vec4& Pos, const vec4& Pos_worldSpace, const vec4& Normal, Color Colour, const UV& uvCoords)
 {
     pos = Pos;
     pos_CS = Pos;
     pos_WS = Pos_worldSpace;
     normal = Normal;
     color = Colour;
+	uv = uvCoords;
 }
 
 
