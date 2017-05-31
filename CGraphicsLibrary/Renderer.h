@@ -13,6 +13,7 @@
 #include "Window.h"
 #include "SimpIO.h"
 #include "InputManager.h"
+#include "Texture2D.h"
 
 enum class CAM_INSTR
 {
@@ -41,6 +42,9 @@ public:
 	InputManager userInput;
 
 private:
+	//TEMPORARY!!!
+	Texture2D _texture;
+
 	Window* _window;
 	bool _wireFrame;
 	zBuffer* _zBuffer;

@@ -1,7 +1,6 @@
 #include "Polygon.h"
 
 #include "utility.h"
-#include "Texture2D.h"
 
 #include <iostream>
 #include <math.h>
@@ -151,7 +150,8 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
                               double opacity, bool wireframe,
                               zBuffer* zbuffer,
                               Window* window,
-                              Lighting* lightEngine)
+                              Lighting* lightEngine,
+							  Texture2D& texture)
 {
 	// Draw wireframe if enabled
 	if (wireframe)
@@ -165,11 +165,11 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 	}
 
 	// TEXTURE MAPPING TEST STUFF
-	Texture2D texture = Texture2D("../assets/textures/wood_crate.png");
+	//Texture2D texture = Texture2D("../assets/textures/wood_crate.png");
 
 	for (unsigned int i = 0; i < points.size(); i++)
 	{
-		points[i].uv = UV(points[i].uv.u * texture.getWidth(), points[i].uv.v * (texture.getHeight() - 1));
+		points[i].uv = UV(points[i].uv.u * texture.getWidth(), points[i].uv.v * texture.getHeight());
 	}
 
 	// Enable rounded integer vertex coordinates
@@ -311,7 +311,7 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 
 			uv_L1 = uv_L2;
 			uv_L2 = left_array[index_L + 1].uv * (1.0 / left_array[index_L + 1].pos.z);
-			uvSlope_L = getSlope_uv(uv_L1, uv_L2, dy_L);
+			uvSlope_L = getSlope_uv(uv_L1, uv_L2, dy);
 		}
 
 		if (y == right_array[index_R + 1].pos_CS.y)
@@ -338,7 +338,7 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 
 			uv_R1 = uv_R2;
 			uv_R2 = right_array[index_R + 1].uv * (1.0 / right_array[index_R + 1].pos.z);
-			uvSlope_R = getSlope_uv(uv_R1, uv_R2, dy_R);
+			uvSlope_R = getSlope_uv(uv_R1, uv_R2, dy);
 		}
 
 		int L_endpoint = (int)round((left_array[index_L].pos_CS.y - y) * slope_L + left_array[index_L].pos_CS.x);
@@ -392,7 +392,7 @@ void Polygon::drawPolygonLERP(std::vector<Vertex>& points,
 				Color color = Color(PerspCorr_Color);
 
 				//std::cout << round(PerspCorr_UV.u) << " " << round(PerspCorr_UV.v) << std::endl;
-				RGBA texel = texture.getTexel(PerspCorr_UV.u, PerspCorr_UV.v);
+				RGBA texel = texture.getTexel((int)round(PerspCorr_UV.u), (int)round(PerspCorr_UV.v));
 				color = Color(texel.r, texel.g, texel.b);
 
 				//color = points[0].color;

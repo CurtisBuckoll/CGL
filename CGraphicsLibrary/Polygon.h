@@ -9,6 +9,7 @@
 #include "Vertex.h"
 #include "Lighting.h"
 #include "Window.h"
+#include "Texture2D.h"
 
 
 
@@ -26,6 +27,7 @@ public:
 								bool wireframe, 
 								zBuffer* zbuffer,
                                 Window* window,
-                                Lighting* lightEngine);
+                                Lighting* lightEngine,
+								Texture2D& texture);
 };
 

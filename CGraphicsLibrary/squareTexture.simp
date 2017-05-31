@@ -17,7 +17,7 @@ phong
 
 {
     translate (0, 0, 30)
-    scale (50, 50, 50)
+    scale (20, 20, 20)
 	translate (-0.5, -0.5, 0)
 
     obj "square_texture"

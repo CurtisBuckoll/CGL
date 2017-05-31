@@ -37,6 +37,9 @@ Renderer::Renderer(Window* window, Lighting* _LightEngine, PolygonList* vertexDa
 
 	_forward = vec4(0.0, 0.0, 1.0, 0.0);
 	_right = vec4(1.0, 0.0, 0.0, 0.0);
+
+	// TEMPORARY!!
+	_texture = Texture2D("../assets/textures/wood_crate.png"); // TEMPORARY!!
 }
 
 
@@ -179,7 +182,7 @@ void Renderer::renderData()
 			else if (transformedVertices[j].size() >= 3)
 			{
 				_lightEngine->init(&transformedVertices[j]);
-				Polygon::drawPolygonLERP(transformedVertices[j], 1.0, _wireFrame, _zBuffer, _window, _lightEngine);
+				Polygon::drawPolygonLERP(transformedVertices[j], 1.0, _wireFrame, _zBuffer, _window, _lightEngine, _texture);
 			}
 		}
 	}

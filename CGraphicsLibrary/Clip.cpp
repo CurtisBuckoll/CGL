@@ -97,6 +97,12 @@ inline vec4 computeClippedWSC(const Vertex& p0, const Vertex& p1, double t)
 }
 
 
+inline UV computeClippedUV(const Vertex& p0, const Vertex p1, double t)
+{
+	return (p0.uv * t) + (p1.uv * (1 - t));
+}
+
+
 void Clip::clipPlane(std::vector<Vertex>* vertices, const vec4& plane)
 {
     if (vertices->size() < 2)
@@ -175,8 +181,9 @@ void Clip::clipPlane(std::vector<Vertex>* vertices, const vec4& plane)
 
             clippedVec.pos_WS = computeClippedWSC(prev, curr, t);
             clippedVec.normal = computeClippedNormal(prev, curr, t);
-
             clippedVec.color = computeClippedColour(prev, curr, t);
+			clippedVec.uv = computeClippedUV(prev, curr, t);
+
             clippedVertices.append(clippedVec);
             inPositiveHS = !inPositiveHS;
         }
@@ -190,8 +197,9 @@ void Clip::clipPlane(std::vector<Vertex>* vertices, const vec4& plane)
 
             clippedVec.pos_WS = computeClippedWSC(prev, curr, t);
             clippedVec.normal = computeClippedNormal(prev, curr, t);
-
             clippedVec.color = computeClippedColour(prev, curr, t);
+			clippedVec.uv = computeClippedUV(prev, curr, t);
+
             clippedVertices.append(clippedVec);
             clippedVertices.append(curr);
             inPositiveHS = !inPositiveHS;
